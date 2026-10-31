@@ -118,4 +118,12 @@ export class EscalaService {
     }
     return null;
   }
+
+  /**
+   * Retorna o status da data de hoje
+   */
+  static obterStatusHoje(dataInicioEscala) {
+    const hojeStr = this.formatarDataISO(new Date());
+    return this.obterStatusDia(hojeStr, dataInicioEscala);
+  }
 }

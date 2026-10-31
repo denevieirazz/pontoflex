@@ -36,6 +36,7 @@ export class StorageService {
   static pronto = false;
 
   static async obterDB() {
+    if (typeof indexedDB === 'undefined') return null;
     if (this.dbPromise) return this.dbPromise;
 
     this.dbPromise = new Promise((resolve) => {
@@ -199,10 +200,11 @@ export class StorageService {
   }
 
   static obterConfig() {
-    if (!this.cacheConfig) {
+    if (!this.cacheConfig || typeof this.cacheConfig !== 'object') {
       try {
         const dados = localStorage.getItem(STORAGE_KEYS.CONFIG);
-        this.cacheConfig = dados ? { ...CONFIG_PADRAO, ...JSON.parse(dados) } : { ...CONFIG_PADRAO };
+        const parsed = dados ? JSON.parse(dados) : null;
+        this.cacheConfig = parsed ? { ...CONFIG_PADRAO, ...parsed } : { ...CONFIG_PADRAO };
       } catch {
         this.cacheConfig = { ...CONFIG_PADRAO };
       }
@@ -217,10 +219,11 @@ export class StorageService {
   }
 
   static obterPontos() {
-    if (!this.cachePontos) {
+    if (!Array.isArray(this.cachePontos)) {
       try {
         const dados = localStorage.getItem(STORAGE_KEYS.PONTOS);
-        this.cachePontos = dados ? JSON.parse(dados) : [];
+        const parsed = dados ? JSON.parse(dados) : [];
+        this.cachePontos = Array.isArray(parsed) ? parsed : [];
       } catch {
         this.cachePontos = [];
       }

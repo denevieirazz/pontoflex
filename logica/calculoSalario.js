@@ -25,6 +25,14 @@ export class CalculoSalarioService {
   }
 
   /**
+   * Calcula o valor da hora base
+   */
+  static calcularValorHora(salarioBase, horasMensais) {
+    const divisor = Number(horasMensais) || 220;
+    return divisor > 0 ? (Number(salarioBase) || 0) / divisor : 0;
+  }
+
+  /**
    * Realiza todo o cálculo financeiro do mês
    * @param {Object} resumoConsolidado Retorno do PontoService.consolidarMes
    * @param {Object} config Configurações salariais do usuário

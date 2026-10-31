@@ -136,6 +136,13 @@ export class AlarmeService {
   }
 
   /**
+   * Alias de previsão de disparo
+   */
+  static obterPrevisaoProximoDisparo(config) {
+    return this.obterPrevisaoProximoAlarme();
+  }
+
+  /**
    * Finaliza o disparo atual
    */
   static silenciar() {
