@@ -1,0 +1,17 @@
+{
+  "name": "escala-ponto",
+  "version": "1.0.0",
+  "description": "Aplicativo desenvolvido para atender exatamente à sua rotina de trabalho em escala alternada (1 dia sim, 1 dia não), com registro de ponto, horas extras, alarme inteligente e cálculo financeiro mensal para comprovação na empresa.",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "type": "module",
+  "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/preferences": "^8.0.1"
+  }
+}

@@ -1,0 +1,175 @@
+/**
+ * Estilos do Calendário Interativo da Escala 1x1 - PontoFlex Pro
+ */
+
+.calendario-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendario-navegacao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 4px;
+}
+
+.calendario-mes-ano {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--texto-primario);
+  letter-spacing: -0.3px;
+  text-transform: capitalize;
+}
+
+.calendario-nav-botoes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-nav-cal {
+  background: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  color: var(--texto-primario);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transicao-rapida);
+}
+
+.btn-nav-cal:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--cor-borda-foco);
+}
+
+.calendario-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-md);
+  font-size: 0.74rem;
+  color: var(--texto-secundario);
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legenda-cor {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.legenda-cor.trabalho { background-color: #10b981; }
+.legenda-cor.folga { background-color: #3b82f6; }
+.legenda-cor.folga-trabalhada { background-color: #f59e0b; }
+
+.grade-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  padding: 4px 0;
+}
+
+.grade-mes-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.celula-dia {
+  min-height: 58px;
+  background: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-sm);
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transicao-rapida);
+  position: relative;
+  user-select: none;
+}
+
+.celula-dia:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+}
+
+.celula-dia.outro-mes {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.celula-dia.hoje {
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.celula-dia-numero {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--fonte-mono);
+  color: var(--texto-primario);
+}
+
+.celula-dia.hoje .celula-dia-numero {
+  color: #38bdf8;
+}
+
+.celula-dia-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.celula-dia-badge.trabalho {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.celula-dia-badge.folga {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.celula-dia-badge.folga-trabalhada {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.ponto-marcado-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #38bdf8;
+  box-shadow: 0 0 6px #38bdf8;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}

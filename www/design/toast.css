@@ -1,0 +1,56 @@
+/**
+ * Notificações Toast Flutuantes (Mobile-friendly e não-bloqueante)
+ */
+
+#container-toast {
+  position: fixed;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 90%;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.toast-msg {
+  background: rgba(30, 41, 59, 0.96);
+  border: 1px solid var(--cor-borda);
+  color: var(--texto-primario);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastFadeIn 0.25s ease, toastFadeOut 0.25s ease 2.75s forwards;
+  pointer-events: auto;
+}
+
+.toast-msg.sucesso {
+  border-left: 4px solid var(--cor-trabalho);
+}
+
+.toast-msg.info {
+  border-left: 4px solid var(--cor-folga);
+}
+
+.toast-msg.alerta {
+  border-left: 4px solid var(--cor-alerta);
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}

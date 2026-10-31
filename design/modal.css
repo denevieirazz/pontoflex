@@ -1,0 +1,113 @@
+/**
+ * Estilos de Modais e Telas de Alerta - PontoFlex Pro
+ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(3, 7, 18, 0.82);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+
+.modal-overlay.visivel {
+  display: flex;
+}
+
+.modal-caixa {
+  background: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  animation: modalEntrada 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalEntrada {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--cor-borda);
+  padding-bottom: 12px;
+}
+
+.modal-cabecalho h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--texto-primario);
+}
+
+.btn-fechar-modal {
+  background: transparent;
+  border: none;
+  color: var(--texto-suave);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fechar-modal:hover {
+  color: var(--texto-primario);
+}
+
+.modal-rodape {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--cor-borda);
+  padding-top: 14px;
+}
+
+/* Tela Cheia de Alarme Disparado */
+.tela-alarme-disparo {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #090d16;
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  gap: 22px;
+}
+
+.tela-alarme-disparo.ativa {
+  display: flex;
+}
+
+.alarme-icone-pulsante {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseAlarm 1s infinite alternate;
+}
+
+@keyframes pulseAlarm {
+  from { transform: scale(0.92); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+  to { transform: scale(1.18); box-shadow: 0 0 45px rgba(239, 68, 68, 0.9); }
+}

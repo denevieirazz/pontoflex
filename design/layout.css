@@ -1,0 +1,208 @@
+/**
+ * Layout e Estrutura Geral da Aplicação
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--fonte-principal);
+  background-color: var(--bg-app);
+  color: var(--texto-primario);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+#app-container {
+  width: 100%;
+  max-width: 520px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: var(--bg-app);
+  padding-bottom: 90px; /* Espaço para a barra de navegação inferior */
+}
+
+/* Cabeçalho Principal */
+.cabecalho-app {
+  padding: 16px 20px 12px 20px;
+  background-color: rgba(11, 15, 25, 0.92);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cabecalho-info h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #60a5fa, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cabecalho-data {
+  font-size: 0.8rem;
+  color: var(--texto-secundario);
+  margin-top: 2px;
+}
+
+/* Indicador de Status Offline/Sincronizado */
+.badge-status-rede {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  color: var(--texto-secundario);
+  cursor: pointer;
+  transition: var(--transicao-rapida);
+}
+
+.badge-status-rede.offline .ponto-luz {
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.badge-status-rede.online .ponto-luz {
+  background-color: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.ponto-luz {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Banner de Nova Versão / Atualização PWA */
+.banner-atualizacao {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #fff;
+  padding: 10px 16px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  position: sticky;
+  top: 60px;
+  z-index: 45;
+  animation: slideDown 0.3s ease;
+}
+
+.banner-atualizacao.visivel {
+  display: flex;
+}
+
+.banner-atualizacao button {
+  background: #ffffff;
+  color: #1d4ed8;
+  border: none;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+/* Conteúdo Principal e Abas */
+.conteudo-principal {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.secao-aba {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+
+.secao-aba.ativa {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Barra de Navegação Inferior (Bottom Bar) */
+.barra-navegacao-inferior {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 520px;
+  height: 72px;
+  background-color: rgba(19, 28, 46, 0.95);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+  padding: 0 8px;
+}
+
+.btn-nav-aba {
+  background: none;
+  border: none;
+  color: var(--texto-suave);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  font-size: 0.72rem;
+  font-weight: 500;
+  transition: var(--transicao-rapida);
+  flex: 1;
+}
+
+.btn-nav-aba svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  transition: var(--transicao-rapida);
+}
+
+.btn-nav-aba.ativa {
+  color: #38bdf8;
+}
+
+.btn-nav-aba.ativa svg {
+  transform: translateY(-2px);
+  stroke: #38bdf8;
+}
+
+/* Animações Básicas */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}

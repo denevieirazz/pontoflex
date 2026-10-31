@@ -1,0 +1,8 @@
+{
+  "appId": "com.pontoflex.app",
+  "appName": "PontoFlex",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

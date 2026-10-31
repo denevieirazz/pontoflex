@@ -1,0 +1,24 @@
+{
+  "name": "PontoFlex Pro - Ponto & Escala 1x1",
+  "short_name": "PontoFlex Pro",
+  "description": "Controle de ponto offline com escala 1x1, alarme inteligente e cálculo de horas extras e salário.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080b11",
+  "theme_color": "#080b11",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
