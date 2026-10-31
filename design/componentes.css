@@ -1,6 +1,5 @@
 /**
  * Componentes de Interface Corporativa - PontoFlex Pro
- * Padrão: Tangerino / PontoTel / Linear
  */
 
 /* Cards Padrão */
@@ -160,11 +159,6 @@
   box-shadow: 0 6px 20px -2px rgba(239, 68, 68, 0.45);
 }
 
-.btn-bater-ponto-principal.intervalo {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  box-shadow: 0 6px 20px -2px rgba(245, 158, 11, 0.45);
-}
-
 .botoes-ponto-duplos {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -185,100 +179,6 @@
   gap: 8px;
   cursor: pointer;
   transition: var(--transicao-rapida);
-}
-
-/* Blocos de Horário de Hoje (4 Pontos CLT) */
-.grid-pontos-hoje-quatro {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  width: 100%;
-}
-
-.bloco-ponto-tempo {
-  background: var(--bg-input);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--radius-sm);
-  padding: 10px 6px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.bloco-ponto-tempo .rotulo-mini {
-  font-size: 0.68rem;
-  color: var(--texto-secundario);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.bloco-ponto-tempo .valor-hora {
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: var(--fonte-mono);
-  color: var(--texto-primario);
-}
-
-.bloco-ponto-tempo.ativo {
-  border-color: rgba(56, 189, 248, 0.4);
-  background: rgba(56, 189, 248, 0.05);
-}
-
-/* Dashboard de Indicadores (KPI Cards) */
-.grid-kpis-corporativos {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.kpi-card {
-  background: var(--bg-card);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-  overflow: hidden;
-}
-
-.kpi-card-topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.kpi-titulo {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--texto-secundario);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.kpi-icone {
-  width: 18px;
-  height: 18px;
-  opacity: 0.8;
-}
-
-.kpi-valor {
-  font-size: 1.35rem;
-  font-weight: 800;
-  font-family: var(--fonte-mono);
-  color: var(--texto-primario);
-  margin-top: 2px;
-}
-
-.kpi-valor.destaque-azul { color: #38bdf8; }
-.kpi-valor.destaque-verde { color: #34d399; }
-.kpi-valor.destaque-ambar { color: #fbbf24; }
-
-.kpi-subtexto {
-  font-size: 0.72rem;
-  color: var(--texto-suave);
 }
 
 /* Listagem de Histórico Corporativo */
@@ -326,121 +226,4 @@
   padding-top: 6px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 0.8rem;
-}
-
-/* Formulários e Inputs */
-.campo-form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.campo-form label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--texto-secundario);
-}
-
-.campo-form input,
-.campo-form select {
-  background: var(--bg-input);
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  color: var(--texto-primario);
-  font-size: 0.92rem;
-  outline: none;
-  transition: var(--transicao-rapida);
-}
-
-.campo-form input:focus,
-.campo-form select:focus {
-  border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-/* Botões Padrão */
-.btn-padrao {
-  background: var(--cor-primaria);
-  color: #fff;
-  border: none;
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: var(--transicao-rapida);
-}
-
-.btn-padrao:hover {
-  background: var(--cor-primaria-hover);
-}
-
-.btn-secundario {
-  background: transparent;
-  border: 1px solid var(--cor-borda);
-  color: var(--texto-primario);
-  padding: 10px 16px;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.btn-secundario:hover {
-  background: var(--bg-surface);
-}
-
-/* Switch / Toggle */
-.switch-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 0;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 48px;
-  height: 26px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #334155;
-  transition: 0.2s;
-  border-radius: 34px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.2s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #10b981;
-}
-
-input:checked + .slider:before {
-  transform: translateX(22px);
 }

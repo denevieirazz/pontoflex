@@ -21,7 +21,7 @@ function copyRecursive(src, dst) {
   }
 }
 
-const itemsToCopy = ['index.html', 'manifest.webmanifest', 'sw.js', 'design', 'logica', 'ferramentas', 'icons'];
+const itemsToCopy = ['index.html', 'app.js', 'manifest.webmanifest', 'sw.js', 'design', 'logica', 'ferramentas', 'icons'];
 for (const item of itemsToCopy) {
   const srcPath = path.join(__dirname, item);
   if (fs.existsSync(srcPath)) {

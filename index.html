@@ -10,10 +10,12 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
 
-  <!-- Estilos Corporativos Modularizados -->
+  <!-- Estilos Modularizados (<= 300 Linhas cada) -->
   <link rel="stylesheet" href="design/tokens.css">
   <link rel="stylesheet" href="design/layout.css">
   <link rel="stylesheet" href="design/componentes.css">
+  <link rel="stylesheet" href="design/forms.css">
+  <link rel="stylesheet" href="design/kpi.css">
   <link rel="stylesheet" href="design/calendario.css">
   <link rel="stylesheet" href="design/modal.css">
   <link rel="stylesheet" href="design/toast.css">
@@ -24,7 +26,7 @@
     <!-- Cabeçalho Corporativo Fixo -->
     <header class="cabecalho-app">
       <div class="cabecalho-info">
-        <h1>PONTOFLEX <span style="font-size:0.7rem; font-weight:800; color:#38bdf8; background:rgba(56,189,248,0.12); padding:2px 6px; border-radius:4px; vertical-align:middle;">PRO</span></h1>
+        <h1>PONTOFLEX <span style="font-size:0.7rem; font-weight:800; color:#38bdf8; background:rgba(56,189,248,0.12); padding:2px 6px; border-radius:4px;">PRO</span></h1>
         <div id="cabecalho-data-hoje" class="cabecalho-data">Carregando data...</div>
       </div>
       <div id="badge-status-conexao" class="badge-status-rede offline" title="Status da Conexão">
@@ -33,13 +35,13 @@
       </div>
     </header>
 
-    <!-- Banner OTA (Atualização Instantânea sem Reinstalar) -->
+    <!-- Banner OTA (Atualização Instantânea) -->
     <div id="banner-nova-versao" class="banner-atualizacao">
       <span>🚀 Nova versão disponível!</span>
       <button id="btn-atualizar-app">Atualizar Agora</button>
     </div>
 
-    <!-- Conteúdo Principal com Abas -->
+    <!-- Conteúdo Principal -->
     <main class="conteudo-principal">
 
       <!-- ABA 1: REGISTRADOR DE PONTO -->
@@ -53,10 +55,7 @@
           </div>
 
           <div id="area-acoes-ponto-dinamicas" class="area-acoes-ponto">
-            <button id="btn-acao-entrada" class="btn-bater-ponto-principal">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              Registrar Entrada
-            </button>
+            <button id="btn-acao-entrada" class="btn-bater-ponto-principal">Registrar Entrada</button>
           </div>
 
           <button id="btn-lancamento-manual-hoje" class="btn-secundario" style="font-size:0.78rem; padding:6px 14px; border-radius:var(--radius-full); margin-top:4px;">
@@ -67,29 +66,14 @@
         <!-- 4 Horários do Dia (Padrão CLT) -->
         <div class="card">
           <div class="card-cabecalho">
-            <span class="card-titulo">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Jornada de Hoje
-            </span>
+            <span class="card-titulo">Jornada de Hoje</span>
             <span style="font-size:0.75rem; color:var(--texto-secundario);">Total: <strong id="display-total-hoje" style="color:var(--texto-primario); font-family:var(--fonte-mono);">0h 00m</strong></span>
           </div>
           <div class="grid-pontos-hoje-quatro">
-            <div class="bloco-ponto-tempo">
-              <span class="rotulo-mini">Entrada</span>
-              <span id="bloco-hora-entrada" class="valor-hora">--:--</span>
-            </div>
-            <div class="bloco-ponto-tempo">
-              <span class="rotulo-mini">Almoço</span>
-              <span id="bloco-hora-saida-almoco" class="valor-hora">--:--</span>
-            </div>
-            <div class="bloco-ponto-tempo">
-              <span class="rotulo-mini">Volta</span>
-              <span id="bloco-hora-retorno-almoco" class="valor-hora">--:--</span>
-            </div>
-            <div class="bloco-ponto-tempo">
-              <span class="rotulo-mini">Saída</span>
-              <span id="bloco-hora-saida" class="valor-hora">--:--</span>
-            </div>
+            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Entrada</span><span id="bloco-hora-entrada" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Almoço</span><span id="bloco-hora-saida-almoco" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Volta</span><span id="bloco-hora-retorno-almoco" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Saída</span><span id="bloco-hora-saida" class="valor-hora">--:--</span></div>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--texto-secundario); padding-top:4px; border-top:1px solid rgba(255,255,255,0.05);">
             <span>Hora Extra Hoje:</span>
@@ -100,56 +84,30 @@
 
       <!-- ABA 2: ESCALA 1X1 & ALARME INTELIGENTE -->
       <section id="aba-escala" class="secao-aba">
-        <!-- Calendário Interativo -->
         <div class="card">
           <div id="container-calendario-interativo"></div>
         </div>
 
-        <!-- Início da Escala 1x1 -->
         <div class="card">
           <div class="card-cabecalho">
-            <span class="card-titulo">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Sincronia da Escala 1x1
-            </span>
+            <span class="card-titulo">Sincronia da Escala 1x1</span>
           </div>
-          <p style="font-size:0.78rem; color:var(--texto-secundario);">
-            Informe qualquer dia em que você <strong>trabalhou (plantão)</strong> para o algoritmo alternar 1 dia sim e 1 dia não perfeitamente.
-          </p>
+          <p style="font-size:0.78rem; color:var(--texto-secundario);">Informe um dia de <strong>trabalho (plantão)</strong> para a escala alternar automaticamente.</p>
           <div style="display:flex; gap:10px;">
             <input type="date" id="input-inicio-escala" style="flex:1; background:var(--bg-input); border:1px solid var(--cor-borda); color:#fff; padding:10px; border-radius:var(--radius-sm);">
             <button id="btn-salvar-inicio-escala" class="btn-padrao" style="padding:10px 16px;">Salvar</button>
           </div>
         </div>
 
-        <!-- Alarme Inteligente 1x1 -->
         <div class="card">
           <div class="card-cabecalho">
-            <span class="card-titulo">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              Alarme Inteligente 1x1
-            </span>
-            <label class="switch">
-              <input type="checkbox" id="switch-alarme-ativo">
-              <span class="slider"></span>
-            </label>
+            <span class="card-titulo">Alarme Inteligente 1x1</span>
+            <label class="switch"><input type="checkbox" id="switch-alarme-ativo"><span class="slider"></span></label>
           </div>
-          <div id="texto-previsao-alarme" style="font-size:0.85rem; font-weight:600; color:#38bdf8; background:rgba(56,189,248,0.08); padding:10px 12px; border-radius:var(--radius-sm); border:1px solid rgba(56,189,248,0.2);">
-            Calculando próximo disparo...
-          </div>
+          <div id="texto-previsao-alarme" style="font-size:0.85rem; font-weight:600; color:#38bdf8; background:rgba(56,189,248,0.08); padding:10px 12px; border-radius:var(--radius-sm); border:1px solid rgba(56,189,248,0.2);">Calculando próximo disparo...</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="campo-form">
-              <label>Horário de Despertar</label>
-              <input type="time" id="input-alarme-horario" value="06:00">
-            </div>
-            <div class="campo-form">
-              <label>Toque do Alarme</label>
-              <select id="select-alarme-som">
-                <option value="suave">Zen Suave</option>
-                <option value="classico">Clássico Digital</option>
-                <option value="vibrante">Alerta Forte</option>
-              </select>
-            </div>
+            <div class="campo-form"><label>Horário</label><input type="time" id="input-alarme-horario" value="06:00"></div>
+            <div class="campo-form"><label>Toque</label><select id="select-alarme-som"><option value="suave">Zen Suave</option><option value="classico">Clássico Digital</option><option value="vibrante">Alerta Forte</option></select></div>
           </div>
           <div style="display:flex; justify-content:space-between; gap:10px;">
             <button id="btn-testar-som-alarme" class="btn-secundario" style="flex:1;">🔊 Testar Som</button>
@@ -160,59 +118,39 @@
 
       <!-- ABA 3: EXTRATO & CÁLCULO SALARIAL -->
       <section id="aba-extrato" class="secao-aba">
-        <!-- Filtro de Mês -->
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <input type="month" id="filtro-mes-ano" style="background:var(--bg-card); border:1px solid var(--cor-borda); color:#fff; padding:8px 14px; border-radius:var(--radius-md); font-weight:700;">
           <div style="display:flex; gap:6px;">
-            <button id="btn-gerar-espelho-pdf" class="btn-padrao" style="font-size:0.78rem; padding:8px 12px;" title="Espelho de Ponto em PDF">📄 PDF</button>
-            <button id="btn-exportar-csv" class="btn-secundario" style="font-size:0.78rem; padding:8px 12px;" title="Planilha Excel">📊 CSV</button>
+            <button id="btn-gerar-espelho-pdf" class="btn-padrao" style="font-size:0.78rem; padding:8px 12px;">📄 PDF</button>
+            <button id="btn-exportar-csv" class="btn-secundario" style="font-size:0.78rem; padding:8px 12px;">📊 CSV</button>
           </div>
         </div>
 
-        <!-- 4 KPI Cards Corporativos -->
         <div class="grid-kpis-corporativos">
           <div class="kpi-card">
-            <div class="kpi-card-topo">
-              <span class="kpi-titulo">Previsão Salarial</span>
-              <svg class="kpi-icone" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
+            <div class="kpi-card-topo"><span class="kpi-titulo">Previsão Salarial</span></div>
             <div id="kpi-valor-salario" class="kpi-valor destaque-azul">R$ 0,00</div>
             <span class="kpi-subtexto">Salário Base + HE + DSR</span>
           </div>
-
           <div class="kpi-card">
-            <div class="kpi-card-topo">
-              <span class="kpi-titulo">Horas Extras</span>
-              <svg class="kpi-icone" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            </div>
+            <div class="kpi-card-topo"><span class="kpi-titulo">Horas Extras</span></div>
             <div id="kpi-valor-horas-extras" class="kpi-valor destaque-ambar">0h 00m</div>
             <span class="kpi-subtexto">50% e 100% (Folgas)</span>
           </div>
-
           <div class="kpi-card">
-            <div class="kpi-card-topo">
-              <span class="kpi-titulo">Horas Cumpridas</span>
-              <svg class="kpi-icone" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
+            <div class="kpi-card-topo"><span class="kpi-titulo">Horas Cumpridas</span></div>
             <div id="kpi-valor-horas-normais" class="kpi-valor destaque-verde">0h 00m</div>
             <span class="kpi-subtexto">Jornada normal de plantão</span>
           </div>
-
           <div class="kpi-card">
-            <div class="kpi-card-topo">
-              <span class="kpi-titulo">Plantões Mês</span>
-              <svg class="kpi-icone" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-            </div>
+            <div class="kpi-card-topo"><span class="kpi-titulo">Plantões Mês</span></div>
             <div id="kpi-valor-plantoes" class="kpi-valor">0 dias</div>
             <span class="kpi-subtexto">Dias trabalhados</span>
           </div>
         </div>
 
-        <!-- Lista de Registros -->
         <div class="card">
-          <div class="card-cabecalho">
-            <span class="card-titulo">Extrato Diário do Mês</span>
-          </div>
+          <div class="card-cabecalho"><span class="card-titulo">Extrato Diário do Mês</span></div>
           <div id="lista-registros-historico" class="lista-registros"></div>
         </div>
       </section>
@@ -220,60 +158,29 @@
       <!-- ABA 4: AJUSTES & PERFIL -->
       <section id="aba-ajustes" class="secao-aba">
         <div class="card">
-          <div class="card-cabecalho">
-            <span class="card-titulo">Parâmetros Salariais e CLT</span>
-          </div>
+          <div class="card-cabecalho"><span class="card-titulo">Parâmetros Salariais e CLT</span></div>
           <form id="form-config-salario" style="display:flex; flex-direction:column; gap:12px;">
-            <div class="campo-form">
-              <label>Seu Nome (Para o Espelho de Ponto)</label>
-              <input type="text" id="config-nome" placeholder="Douglas Vieira">
+            <div class="campo-form"><label>Seu Nome (Para o Espelho de Ponto)</label><input type="text" id="config-nome" placeholder="Douglas Vieira"></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="campo-form"><label>Empresa</label><input type="text" id="config-empresa" placeholder="Empresa"></div>
+              <div class="campo-form"><label>Cargo / Função</label><input type="text" id="config-cargo" placeholder="Função"></div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="campo-form">
-                <label>Empresa</label>
-                <input type="text" id="config-empresa" placeholder="Nome da Empresa">
-              </div>
-              <div class="campo-form">
-                <label>Cargo / Função</label>
-                <input type="text" id="config-cargo" placeholder="Ex: Operador">
-              </div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="campo-form">
-                <label>Salário Base Mensal (R$)</label>
-                <input type="number" step="0.01" id="config-salario-base" value="2000">
-              </div>
-              <div class="campo-form">
-                <label>Horas Contratuais Mês</label>
-                <input type="number" id="config-horas-mensais" value="220">
-              </div>
+              <div class="campo-form"><label>Salário Base Mensal (R$)</label><input type="number" step="0.01" id="config-salario-base" value="2000"></div>
+              <div class="campo-form"><label>Horas Contratuais</label><input type="number" id="config-horas-mensais" value="220"></div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
-              <div class="campo-form">
-                <label>Jornada Diária</label>
-                <input type="number" id="config-jornada-padrao" value="8">
-              </div>
-              <div class="campo-form">
-                <label>% HE Normal</label>
-                <input type="number" id="config-porcentagem-normal" value="50">
-              </div>
-              <div class="campo-form">
-                <label>% HE Folga</label>
-                <input type="number" id="config-porcentagem-folga" value="100">
-              </div>
+              <div class="campo-form"><label>Jornada (h)</label><input type="number" id="config-jornada-padrao" value="8"></div>
+              <div class="campo-form"><label>% HE Normal</label><input type="number" id="config-porcentagem-normal" value="50"></div>
+              <div class="campo-form"><label>% HE Folga</label><input type="number" id="config-porcentagem-folga" value="100"></div>
             </div>
             <button type="submit" class="btn-padrao" style="margin-top:6px;">Salvar Parâmetros</button>
           </form>
         </div>
 
-        <!-- Segurança e Backup -->
         <div class="card">
-          <div class="card-cabecalho">
-            <span class="card-titulo">Segurança e Backup dos Dados</span>
-          </div>
-          <p style="font-size:0.78rem; color:var(--texto-secundario);">
-            Seus pontos estão gravados no aparelho. Exporte cópias de segurança em JSON para nunca perder nada.
-          </p>
+          <div class="card-cabecalho"><span class="card-titulo">Segurança e Backup dos Dados</span></div>
+          <p style="font-size:0.78rem; color:var(--texto-secundario);">Seus pontos ficam gravados no aparelho. Exporte cópias de segurança em JSON.</p>
           <div style="display:flex; gap:10px;">
             <button id="btn-exportar-backup" class="btn-secundario" style="flex:1;">💾 Baixar Backup</button>
             <label class="btn-secundario" style="flex:1; text-align:center; cursor:pointer;">
@@ -285,7 +192,7 @@
       </section>
     </main>
 
-    <!-- Barra de Navegação Inferior (App Nativo Padrão) -->
+    <!-- Barra de Navegação Inferior -->
     <nav class="barra-navegacao-inferior">
       <button class="btn-nav-aba ativa" data-aba="ponto">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -300,7 +207,7 @@
         <span>Extrato</span>
       </button>
       <button class="btn-nav-aba" data-aba="ajustes">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="3" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>Ajustes</span>
       </button>
     </nav>
@@ -309,43 +216,21 @@
   <!-- Modal de Edição de Ponto -->
   <div id="modal-editar-ponto" class="modal-overlay">
     <div class="modal-caixa">
-      <div class="modal-cabecalho">
-        <h3>Lançamento de Ponto</h3>
-        <button id="btn-fechar-modal-ponto" class="btn-fechar-modal">✕</button>
-      </div>
+      <div class="modal-cabecalho"><h3>Lançamento de Ponto</h3><button id="btn-fechar-modal-ponto" class="btn-fechar-modal">✕</button></div>
       <form id="form-editar-ponto" style="display:flex; flex-direction:column; gap:12px;">
         <input type="hidden" id="modal-ponto-id">
-        <div class="campo-form">
-          <label>Data</label>
-          <input type="date" id="modal-ponto-data" required>
+        <div class="campo-form"><label>Data</label><input type="date" id="modal-ponto-data" required></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="campo-form"><label>Entrada</label><input type="time" id="modal-ponto-entrada" required></div>
+          <div class="campo-form"><label>Saída</label><input type="time" id="modal-ponto-saida"></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="campo-form">
-            <label>Entrada</label>
-            <input type="time" id="modal-ponto-entrada" required>
-          </div>
-          <div class="campo-form">
-            <label>Saída</label>
-            <input type="time" id="modal-ponto-saida">
-          </div>
+          <div class="campo-form"><label>Saída Almoço</label><input type="time" id="modal-ponto-almoco-sai"></div>
+          <div class="campo-form"><label>Volta Almoço</label><input type="time" id="modal-ponto-almoco-volta"></div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="campo-form">
-            <label>Saída Almoço</label>
-            <input type="time" id="modal-ponto-almoco-sai">
-          </div>
-          <div class="campo-form">
-            <label>Volta Almoço</label>
-            <input type="time" id="modal-ponto-almoco-volta">
-          </div>
-        </div>
-        <div class="campo-form">
-          <label>Observação / Justificativa</label>
-          <input type="text" id="modal-ponto-obs" placeholder="Ex: Plantão extra">
-        </div>
+        <div class="campo-form"><label>Observação</label><input type="text" id="modal-ponto-obs" placeholder="Ex: Plantão extra"></div>
         <label style="display:flex; align-items:center; gap:8px; font-size:0.82rem; cursor:pointer;">
-          <input type="checkbox" id="modal-ponto-folga-check">
-          Este dia era minha <strong>folga</strong> (hora extra 100%)
+          <input type="checkbox" id="modal-ponto-folga-check"> Este dia era minha <strong>folga</strong> (hora extra 100%)
         </label>
         <div class="modal-rodape">
           <button type="button" id="btn-cancelar-modal-ponto" class="btn-secundario">Cancelar</button>
@@ -367,55 +252,7 @@
 
   <div id="area-impressao-documento"></div>
 
-  <!-- Script Principal de Inicialização -->
-  <script type="module">
-    import { AppUI } from './design/ui.js';
-    import { AlarmeService } from './logica/alarme.js';
-    import { AudioAlarmeService } from './ferramentas/audioAlarme.js';
-    import { AtualizadorService } from './ferramentas/atualizador.js';
-    import { SyncDataHoraService } from './ferramentas/syncDataHora.js';
-
-    // Inicialização do App
-    await AppUI.inicializar();
-
-    // Seta filtro de data inicial
-    const inputFiltro = document.getElementById('filtro-mes-ano');
-    if (inputFiltro) {
-      const hoje = new Date();
-      inputFiltro.value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
-    }
-
-    // Monitoramento do Alarme Inteligente 1x1
-    AlarmeService.iniciarMonitoramento((dadosAlarme) => {
-      AudioAlarmeService.iniciar(dadosAlarme.som);
-      document.getElementById('tela-alarme-modal')?.classList.add('ativa');
-    });
-
-    // Monitoramento de Conectividade
-    const badgeConexao = document.getElementById('badge-status-conexao');
-    const textoConexao = document.getElementById('texto-status-conexao');
-    const atualizarBadgeRede = (online) => {
-      if (!badgeConexao || !textoConexao) return;
-      if (online) {
-        badgeConexao.className = 'badge-status-rede online';
-        textoConexao.textContent = 'Horário Sincronizado';
-      } else {
-        badgeConexao.className = 'badge-status-rede offline';
-        textoConexao.textContent = '100% Offline';
-      }
-    };
-    SyncDataHoraService.monitorarConexao(atualizarBadgeRede);
-    atualizarBadgeRede(navigator.onLine);
-
-    // Sistema PWA (OTA)
-    AtualizadorService.inicializar({
-      onNovaVersao: () => {
-        document.getElementById('banner-nova-versao')?.classList.add('visivel');
-      }
-    });
-    document.getElementById('btn-atualizar-app')?.addEventListener('click', () => {
-      AtualizadorService.aplicarAtualizacao();
-    });
-  </script>
+  <!-- Ponto de Entrada da Aplicação -->
+  <script type="module" src="app.js"></script>
 </body>
 </html>

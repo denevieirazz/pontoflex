@@ -1,0 +1,97 @@
+/**
+ * Indicadores KPI e Blocos de Jornada CLT - PontoFlex Pro
+ */
+
+/* Blocos de Horário de Hoje (4 Batidas CLT) */
+.grid-pontos-hoje-quatro {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.bloco-ponto-tempo {
+  background: var(--bg-input);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bloco-ponto-tempo .rotulo-mini {
+  font-size: 0.68rem;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.bloco-ponto-tempo .valor-hora {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--fonte-mono);
+  color: var(--texto-primario);
+}
+
+.bloco-ponto-tempo.ativo {
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+/* Dashboard de Indicadores (KPI Cards) */
+.grid-kpis-corporativos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kpi-titulo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.kpi-icone {
+  width: 18px;
+  height: 18px;
+  opacity: 0.8;
+}
+
+.kpi-valor {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--fonte-mono);
+  color: var(--texto-primario);
+  margin-top: 2px;
+}
+
+.kpi-valor.destaque-azul { color: #38bdf8; }
+.kpi-valor.destaque-verde { color: #34d399; }
+.kpi-valor.destaque-ambar { color: #fbbf24; }
+
+.kpi-subtexto {
+  font-size: 0.72rem;
+  color: var(--texto-suave);
+}
