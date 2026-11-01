@@ -5,6 +5,7 @@
 import { StorageService } from '../logica/storage.js';
 import { EscalaService } from '../logica/escala.js';
 import { PontoService } from '../logica/ponto.js';
+import { mostrarToast } from './toast.js';
 
 export class UIModal {
   static vincular(onSalvo) {
@@ -12,10 +13,22 @@ export class UIModal {
     const form = document.getElementById('form-editar-ponto');
     const btnFechar = document.getElementById('btn-fechar-modal-ponto');
     const btnCancelar = document.getElementById('btn-cancelar-modal-ponto');
+    const btnExcluir = document.getElementById('btn-excluir-modal-ponto');
 
     const fechar = () => modal?.classList.remove('visivel');
     btnFechar?.addEventListener('click', fechar);
     btnCancelar?.addEventListener('click', fechar);
+
+    btnExcluir?.addEventListener('click', () => {
+      const id = document.getElementById('modal-ponto-id').value;
+      const data = document.getElementById('modal-ponto-data').value;
+      if (confirm('Deseja realmente apagar o registro de ponto deste dia?')) {
+        StorageService.excluirRegistro(id || data);
+        mostrarToast('Registro removido com sucesso!', 'sucesso');
+        fechar();
+        if (typeof onSalvo === 'function') onSalvo();
+      }
+    });
 
     if (form) {
       form.addEventListener('submit', (e) => {
@@ -46,13 +59,14 @@ export class UIModal {
         };
 
         StorageService.salvarRegistroPonto(registro);
+        mostrarToast('Horário atualizado com sucesso!', 'sucesso');
         fechar();
         if (typeof onSalvo === 'function') onSalvo();
       });
     }
   }
 
-  static abrir(registro) {
+  static abrir(registro, campoFoco) {
     const modal = document.getElementById('modal-editar-ponto');
     if (!modal) return;
 
@@ -69,10 +83,28 @@ export class UIModal {
       checkFolga.checked = registro.isDiaTrabalhoEscala === false;
     }
 
+    const btnExcluir = document.getElementById('btn-excluir-modal-ponto');
+    if (btnExcluir) {
+      btnExcluir.style.display = (registro.entrada || registro.id) ? 'block' : 'none';
+    }
+
     modal.classList.add('visivel');
+
+    // Foco automático no campo que o usuário deseja alterar
+    setTimeout(() => {
+      if (campoFoco === 'saida') {
+        document.getElementById('modal-ponto-saida')?.focus();
+      } else if (campoFoco === 'saidaAlmoco') {
+        document.getElementById('modal-ponto-almoco-sai')?.focus();
+      } else if (campoFoco === 'retornoAlmoco') {
+        document.getElementById('modal-ponto-almoco-volta')?.focus();
+      } else {
+        document.getElementById('modal-ponto-entrada')?.focus();
+      }
+    }, 100);
   }
 
-  static abrirModalEdicao(dataStr) {
+  static abrirModalEdicao(dataStr, campoFoco) {
     const config = StorageService.obterConfig();
     let ponto = StorageService.obterPontoPorData(dataStr);
     if (!ponto) {
@@ -87,6 +119,6 @@ export class UIModal {
         isDiaTrabalhoEscala: isTrabalho
       };
     }
-    this.abrir(ponto);
+    this.abrir(ponto, campoFoco);
   }
 }

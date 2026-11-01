@@ -3,7 +3,7 @@
  * Armazena todos os recursos estáticos em cache e gerencia atualizações instantâneas.
  */
 
-const CACHE_NAME = 'pontoflex-cache-v3.0.0';
+const CACHE_NAME = 'pontoflex-cache-v3.1.0';
 
 // Recursos necessários para funcionamento 100% offline
 const ARQUIVOS_CACHE = [

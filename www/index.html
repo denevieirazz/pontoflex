@@ -61,13 +61,16 @@
         <div class="card">
           <div class="card-cabecalho">
             <span class="card-titulo">Jornada de Hoje</span>
-            <span style="font-size:0.75rem; color:var(--texto-secundario);">Total: <strong id="display-total-hoje" style="color:var(--texto-primario); font-family:var(--fonte-mono);">0h 00m</strong></span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.75rem; color:var(--texto-secundario);">Total: <strong id="display-total-hoje" style="color:var(--texto-primario); font-family:var(--fonte-mono);">0h 00m</strong></span>
+              <button id="btn-editar-jornada-hoje" class="btn-secundario" style="padding:2px 8px; font-size:0.72rem;" title="Editar horários de hoje">✏️ Editar</button>
+            </div>
           </div>
           <div class="grid-pontos-hoje-quatro">
-            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Entrada</span><span id="bloco-hora-entrada" class="valor-hora">--:--</span></div>
-            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Almoço</span><span id="bloco-hora-saida-almoco" class="valor-hora">--:--</span></div>
-            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Volta</span><span id="bloco-hora-retorno-almoco" class="valor-hora">--:--</span></div>
-            <div class="bloco-ponto-tempo"><span class="rotulo-mini">Saída</span><span id="bloco-hora-saida" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo" data-campo="entrada" title="Toque para editar Entrada"><span class="rotulo-mini">Entrada</span><span id="bloco-hora-entrada" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo" data-campo="saidaAlmoco" title="Toque para editar Almoço"><span class="rotulo-mini">Almoço</span><span id="bloco-hora-saida-almoco" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo" data-campo="retornoAlmoco" title="Toque para editar Volta"><span class="rotulo-mini">Volta</span><span id="bloco-hora-retorno-almoco" class="valor-hora">--:--</span></div>
+            <div class="bloco-ponto-tempo" data-campo="saida" title="Toque para editar Saída"><span class="rotulo-mini">Saída</span><span id="bloco-hora-saida" class="valor-hora">--:--</span></div>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--texto-secundario); padding-top:4px; border-top:1px solid rgba(255,255,255,0.05);">
             <span>Hora Extra Hoje:</span>
@@ -268,8 +271,9 @@
           <input type="checkbox" id="modal-ponto-folga-check"> Este dia era minha <strong>folga</strong> (hora extra 100%)
         </label>
         <div class="modal-rodape">
+          <button type="button" id="btn-excluir-modal-ponto" class="btn-secundario" style="color:#ef4444; border-color:rgba(239,68,68,0.3); margin-right:auto; padding:8px 12px; font-size:0.8rem;">🗑️ Excluir</button>
           <button type="button" id="btn-cancelar-modal-ponto" class="btn-secundario">Cancelar</button>
-          <button type="submit" class="btn-padrao">Salvar Registro</button>
+          <button type="submit" class="btn-padrao">Salvar</button>
         </div>
       </form>
     </div>

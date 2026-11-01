@@ -131,11 +131,28 @@ export class AppUI {
         );
         StorageService.salvarRegistroPonto(pontoHoje);
         mostrarToast(`Saída final: ${horaStr}`, 'sucesso');
-      } else if (botao.id === 'btn-ajustar-hoje') {
+      } else if (botao.id === 'btn-ajustar-hoje' || botao.id === 'btn-corrigir-ponto-hoje') {
         UIModal.abrir(pontoHoje);
+        return;
       }
 
       this.atualizarTodaInterface();
+    });
+
+    // Clique nos 4 blocos de horários de hoje para edição imediata
+    document.querySelectorAll('.bloco-ponto-tempo').forEach(bloco => {
+      bloco.addEventListener('click', () => {
+        const agora = SyncDataHoraService.obterAgora();
+        const hojeStr = EscalaService.formatarDataISO(agora);
+        const campo = bloco.dataset.campo || 'entrada';
+        UIModal.abrirModalEdicao(hojeStr, campo);
+      });
+    });
+
+    document.getElementById('btn-editar-jornada-hoje')?.addEventListener('click', () => {
+      const agora = SyncDataHoraService.obterAgora();
+      const hojeStr = EscalaService.formatarDataISO(agora);
+      UIModal.abrirModalEdicao(hojeStr);
     });
 
     document.getElementById('btn-lancamento-manual-hoje')?.addEventListener('click', () => {

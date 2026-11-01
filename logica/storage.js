@@ -263,8 +263,8 @@ export class StorageService {
     return normalizado;
   }
 
-  static excluirRegistro(id) {
-    this.cachePontos = this.obterPontos().filter(p => p.id !== id);
+  static excluirRegistro(idOuData) {
+    this.cachePontos = this.obterPontos().filter(p => p.id !== idOuData && p.data !== idOuData);
     this.persistirTudo();
     return true;
   }

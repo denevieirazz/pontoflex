@@ -78,12 +78,18 @@ export class UIRender {
                 Encerrar Saída
               </button>
             </div>
+            <button id="btn-corrigir-ponto-hoje" class="btn-secundario" style="font-size:0.78rem; padding:6px 14px; border-radius:var(--radius-full); margin-top:4px;">
+              ✏️ Modificar Entrada (${pontoHoje.entrada})
+            </button>
           `;
         } else if (!pontoHoje.retornoAlmoco) {
           containerAcoes.innerHTML = `
             <button id="btn-acao-almoco-retorno" class="btn-bater-ponto-principal" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8);">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
               Retornar do Intervalo
+            </button>
+            <button id="btn-corrigir-ponto-hoje" class="btn-secundario" style="font-size:0.78rem; padding:6px 14px; border-radius:var(--radius-full); margin-top:4px;">
+              ✏️ Modificar Horários Batidos
             </button>
           `;
         } else if (!pontoHoje.saida) {
@@ -92,13 +98,16 @@ export class UIRender {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Registrar Saída Final
             </button>
+            <button id="btn-corrigir-ponto-hoje" class="btn-secundario" style="font-size:0.78rem; padding:6px 14px; border-radius:var(--radius-full); margin-top:4px;">
+              ✏️ Modificar Horários Batidos
+            </button>
           `;
         } else {
           containerAcoes.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
               <span style="font-size:0.9rem; font-weight:700; color:#10b981;">✓ Expediente de Hoje Finalizado</span>
-              <button id="btn-ajustar-hoje" class="btn-secundario" style="font-size:0.8rem; padding:8px 16px;">
-                ✏️ Ajustar Horários de Hoje
+              <button id="btn-corrigir-ponto-hoje" class="btn-secundario" style="font-size:0.8rem; padding:8px 16px;">
+                ✏️ Modificar / Corrigir Horários
               </button>
             </div>
           `;
