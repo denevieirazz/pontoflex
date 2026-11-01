@@ -7,15 +7,13 @@
   <meta name="description" content="App 100% offline para registro de ponto, alarme inteligente e controle de horas na escala 1x1.">
   <meta name="theme-color" content="#080b11">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
-
-  <!-- Estilos Modularizados (<= 300 Linhas cada) -->
   <link rel="stylesheet" href="design/tokens.css">
   <link rel="stylesheet" href="design/layout.css">
   <link rel="stylesheet" href="design/componentes.css">
   <link rel="stylesheet" href="design/forms.css">
   <link rel="stylesheet" href="design/kpi.css">
+  <link rel="stylesheet" href="design/alarme.css">
   <link rel="stylesheet" href="design/calendario.css">
   <link rel="stylesheet" href="design/modal.css">
   <link rel="stylesheet" href="design/toast.css">
@@ -23,28 +21,24 @@
 </head>
 <body>
   <div id="app-container">
-    <!-- Cabeçalho Corporativo Fixo -->
     <header class="cabecalho-app">
       <div class="cabecalho-info">
         <h1>PONTOFLEX <span style="font-size:0.7rem; font-weight:800; color:#38bdf8; background:rgba(56,189,248,0.12); padding:2px 6px; border-radius:4px;">PRO</span></h1>
         <div id="cabecalho-data-hoje" class="cabecalho-data">Carregando data...</div>
       </div>
-      <div id="badge-status-conexao" class="badge-status-rede offline" title="Status da Conexão">
+      <div id="badge-status-conexao" class="badge-status-rede offline">
         <span class="ponto-luz"></span>
         <span id="texto-status-conexao">100% Offline</span>
       </div>
     </header>
 
-    <!-- Banner OTA (Atualização Instantânea) -->
     <div id="banner-nova-versao" class="banner-atualizacao">
       <span>🚀 Nova versão disponível!</span>
       <button id="btn-atualizar-app">Atualizar Agora</button>
     </div>
 
-    <!-- Conteúdo Principal -->
     <main class="conteudo-principal">
-
-      <!-- ABA 1: REGISTRADOR DE PONTO -->
+      <!-- ABA 1: PONTO -->
       <section id="aba-ponto" class="secao-aba ativa">
         <div class="card-relogio-hero">
           <div id="badge-status-turno-hoje" class="badge-status-turno trabalho">
@@ -53,17 +47,17 @@
           <div class="relogio-digital">
             <span id="relogio-horas-minutos">00:00</span><span id="relogio-segundos" class="relogio-segundos">:00</span>
           </div>
-
+          <div id="chip-status-alarme-home" class="chip-alarme-home">Carregando alarme...</div>
           <div id="area-acoes-ponto-dinamicas" class="area-acoes-ponto">
             <button id="btn-acao-entrada" class="btn-bater-ponto-principal">Registrar Entrada</button>
           </div>
-
-          <button id="btn-lancamento-manual-hoje" class="btn-secundario" style="font-size:0.78rem; padding:6px 14px; border-radius:var(--radius-full); margin-top:4px;">
+          <button id="btn-lancamento-manual-hoje" class="btn-secundario" style="font-size:0.78rem; padding:6px 14px; border-radius:var(--radius-full); margin-top:2px;">
             ✏️ Lançamento / Ajuste Manual
           </button>
         </div>
 
-        <!-- 4 Horários do Dia (Padrão CLT) -->
+        <div id="banner-salario-home"></div>
+
         <div class="card">
           <div class="card-cabecalho">
             <span class="card-titulo">Jornada de Hoje</span>
@@ -81,7 +75,6 @@
           </div>
         </div>
 
-        <!-- Visão Rápida da Escala no Home -->
         <div class="card">
           <div class="card-cabecalho">
             <span class="card-titulo">Próximos Dias (Escala 1x1)</span>
@@ -91,45 +84,81 @@
         </div>
       </section>
 
-      <!-- ABA 2: CALENDÁRIO DA ESCALA 1X1 & ALARME -->
+      <!-- ABA 2: CALENDÁRIO 1X1 -->
       <section id="aba-calendario" class="secao-aba">
         <div class="card">
           <div id="container-calendario-interativo"></div>
         </div>
-
         <div class="card">
-          <div class="card-cabecalho">
-            <span class="card-titulo">Ajuste Rápido da Escala 1x1</span>
-          </div>
-          <p style="font-size:0.78rem; color:var(--texto-secundario);">Se hoje é seu dia de folga ou trabalho trocado, inverta com 1 clique:</p>
+          <div class="card-cabecalho"><span class="card-titulo">Ajuste da Escala 1x1</span></div>
+          <p style="font-size:0.78rem; color:var(--texto-secundario);">Se hoje é seu dia de folga ou trabalho trocado, alterne com 1 clique:</p>
           <button id="btn-inverter-escala" class="btn-secundario" style="width:100%; padding:10px; font-weight:700;">🔄 Inverter Escala (Hoje Folga ⟷ Plantão)</button>
           <div style="display:flex; gap:10px; margin-top:8px;">
             <input type="date" id="input-inicio-escala" style="flex:1; background:var(--bg-input); border:1px solid var(--cor-borda); color:#fff; padding:10px; border-radius:var(--radius-sm);">
-            <button id="btn-salvar-inicio-escala" class="btn-padrao" style="padding:10px 16px;">Salvar Data</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-cabecalho">
-            <span class="card-titulo">Alarme Inteligente 1x1</span>
-            <label class="switch"><input type="checkbox" id="switch-alarme-ativo"><span class="slider"></span></label>
-          </div>
-          <div id="texto-previsao-alarme" style="font-size:0.85rem; font-weight:600; color:#38bdf8; background:rgba(56,189,248,0.08); padding:10px 12px; border-radius:var(--radius-sm); border:1px solid rgba(56,189,248,0.2);">Calculando próximo disparo...</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="campo-form"><label>Horário</label><input type="time" id="input-alarme-horario" value="06:00"></div>
-            <div class="campo-form"><label>Toque</label><select id="select-alarme-som"><option value="suave">Zen Suave</option><option value="classico">Clássico Digital</option><option value="vibrante">Alerta Forte</option></select></div>
-          </div>
-          <div style="display:flex; justify-content:space-between; gap:10px;">
-            <button id="btn-testar-som-alarme" class="btn-secundario" style="flex:1;">🔊 Testar Som</button>
-            <button id="btn-salvar-ajustes-alarme" class="btn-padrao" style="flex:1;">Salvar Alarme</button>
+            <button id="btn-salvar-inicio-escala" class="btn-padrao" style="padding:10px 16px;">Salvar</button>
           </div>
         </div>
       </section>
 
-      <!-- ABA 3: EXTRATO & CÁLCULO SALARIAL -->
-      <section id="aba-extrato" class="secao-aba">
+      <!-- ABA 3: ALARME DEDICADO -->
+      <section id="aba-alarme" class="secao-aba">
+        <div class="card-alarme-hero">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--texto-secundario); font-weight:700;">Alarme Inteligente 1x1</span>
+            <label class="switch"><input type="checkbox" id="switch-alarme-tela"><span class="slider"></span></label>
+          </div>
+          <div id="alarme-display-hora" class="alarme-horario-grande">06:00</div>
+          <div style="font-size:0.8rem; color:var(--texto-secundario);">Desperta nos dias de plantão e silencia nas folgas</div>
+        </div>
+
+        <div id="card-status-alarme-box" class="card-status-alarme-inteligente">
+          <div id="icone-alarme-status-box" class="icone-alarme-status trabalho">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div class="texto-alarme-status">
+            <h4 id="titulo-alarme-status-box">Status do Alarme</h4>
+            <p id="desc-alarme-status-box">Carregando previsão de turno...</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-cabecalho"><span class="card-titulo">Configurar Despertador</span></div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="campo-form"><label>Horário</label><input type="time" id="input-alarme-horario-tela" value="06:00"></div>
+            <div class="campo-form"><label>Toque Sonoro</label><select id="select-alarme-som-tela"><option value="suave">Zen Suave</option><option value="classico">Clássico Digital</option><option value="vibrante">Alerta Forte</option></select></div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button id="btn-testar-som-tela" class="btn-secundario" style="flex:1;">🔊 Testar Som</button>
+            <button id="btn-salvar-alarme-tela" class="btn-padrao" style="flex:1;">Salvar Alarme</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 4: GANHOS & SALÁRIO -->
+      <section id="aba-ganhos" class="secao-aba">
+        <div class="card">
+          <div class="card-cabecalho"><span class="card-titulo">Meu Salário & Carga Horária</span></div>
+          <form id="form-ganhos-salario" style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="campo-form"><label>Salário Base Mensal (R$)</label><input type="number" step="0.01" id="ganhos-salario-base" value="2000"></div>
+              <div class="campo-form"><label>Divisor Horas CLT</label><input type="number" id="ganhos-horas-mensais" value="220"></div>
+            </div>
+            <button type="submit" class="btn-padrao" style="padding:10px; font-weight:700;">Salvar e Recalcular Ganhos</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-cabecalho"><span class="card-titulo">Valor da sua Hora de Trabalho</span></div>
+          <div class="grid-valores-hora">
+            <div class="card-valor-hora"><span class="rotulo">Hora Normal</span><span id="display-hora-base" class="valor azul">R$ 0,00/h</span></div>
+            <div class="card-valor-hora"><span class="rotulo">Extra 50%</span><span id="display-hora-extra-50" class="valor ambar">R$ 0,00/h</span></div>
+            <div class="card-valor-hora"><span class="rotulo">Extra 100% (Folga)</span><span id="display-hora-extra-100" class="valor verde">R$ 0,00/h</span></div>
+            <div class="card-valor-hora"><span class="rotulo">Adicional Noturno</span><span id="display-hora-noturna" class="valor roxo">R$ 0,00/h</span></div>
+          </div>
+        </div>
+
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <input type="month" id="filtro-mes-ano" style="background:var(--bg-card); border:1px solid var(--cor-borda); color:#fff; padding:8px 14px; border-radius:var(--radius-md); font-weight:700;">
+          <input type="month" id="filtro-mes-ano" style="background:var(--bg-card); border:1px solid var(--cor-borda); color:#fff; padding:8px 12px; border-radius:var(--radius-md); font-weight:700;">
           <div style="display:flex; gap:6px;">
             <button id="btn-gerar-espelho-pdf" class="btn-padrao" style="font-size:0.78rem; padding:8px 12px;">📄 PDF</button>
             <button id="btn-exportar-csv" class="btn-secundario" style="font-size:0.78rem; padding:8px 12px;">📊 CSV</button>
@@ -138,7 +167,7 @@
 
         <div class="grid-kpis-corporativos">
           <div class="kpi-card">
-            <div class="kpi-card-topo"><span class="kpi-titulo">Previsão Salarial</span></div>
+            <div class="kpi-card-topo"><span class="kpi-titulo">Total a Receber</span></div>
             <div id="kpi-valor-salario" class="kpi-valor destaque-azul">R$ 0,00</div>
             <span class="kpi-subtexto">Salário Base + HE + DSR</span>
           </div>
@@ -160,37 +189,44 @@
         </div>
 
         <div class="card">
+          <div class="card-cabecalho"><span class="card-titulo">Demonstrativo de Proventos</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:0.8rem;">
+            <div style="display:flex; justify-content:space-between; color:var(--texto-secundario);"><span>Salário Base:</span><strong id="demo-salario-base" style="color:#fff;">R$ 0,00</strong></div>
+            <div style="display:flex; justify-content:space-between; color:var(--texto-secundario);"><span>Total Horas Extras 50%:</span><strong id="demo-total-extra-50" style="color:#fbbf24;">R$ 0,00</strong></div>
+            <div style="display:flex; justify-content:space-between; color:var(--texto-secundario);"><span>Total Horas Extras 100% (Folgas):</span><strong id="demo-total-extra-100" style="color:#34d399;">R$ 0,00</strong></div>
+            <div style="display:flex; justify-content:space-between; color:var(--texto-secundario);"><span>Reflexo DSR s/ Extras:</span><strong id="demo-total-dsr" style="color:#60a5fa;">R$ 0,00</strong></div>
+            <div style="display:flex; justify-content:space-between; color:var(--texto-primario); padding-top:6px; border-top:1px solid rgba(255,255,255,0.1); font-weight:700;"><span>Total Bruto Estimado:</span><strong id="demo-total-bruto" style="color:#38bdf8; font-size:0.95rem;">R$ 0,00</strong></div>
+          </div>
+        </div>
+
+        <div class="card">
           <div class="card-cabecalho"><span class="card-titulo">Extrato Diário do Mês</span></div>
           <div id="lista-registros-historico" class="lista-registros"></div>
         </div>
       </section>
 
-      <!-- ABA 4: AJUSTES & PERFIL -->
+      <!-- ABA 5: AJUSTES -->
       <section id="aba-ajustes" class="secao-aba">
         <div class="card">
-          <div class="card-cabecalho"><span class="card-titulo">Parâmetros Salariais e CLT</span></div>
-          <form id="form-config-salario" style="display:flex; flex-direction:column; gap:12px;">
-            <div class="campo-form"><label>Seu Nome (Para o Espelho de Ponto)</label><input type="text" id="config-nome" placeholder="Douglas Vieira"></div>
+          <div class="card-cabecalho"><span class="card-titulo">Dados para Espelho de Ponto</span></div>
+          <form id="form-config-salario" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="campo-form"><label>Seu Nome Completo</label><input type="text" id="config-nome" placeholder="Douglas Vieira"></div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
               <div class="campo-form"><label>Empresa</label><input type="text" id="config-empresa" placeholder="Empresa"></div>
               <div class="campo-form"><label>Cargo / Função</label><input type="text" id="config-cargo" placeholder="Função"></div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="campo-form"><label>Salário Base Mensal (R$)</label><input type="number" step="0.01" id="config-salario-base" value="2000"></div>
-              <div class="campo-form"><label>Horas Contratuais</label><input type="number" id="config-horas-mensais" value="220"></div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
               <div class="campo-form"><label>Jornada (h)</label><input type="number" id="config-jornada-padrao" value="8"></div>
               <div class="campo-form"><label>% HE Normal</label><input type="number" id="config-porcentagem-normal" value="50"></div>
               <div class="campo-form"><label>% HE Folga</label><input type="number" id="config-porcentagem-folga" value="100"></div>
             </div>
-            <button type="submit" class="btn-padrao" style="margin-top:6px;">Salvar Parâmetros</button>
+            <button type="submit" class="btn-padrao" style="margin-top:4px;">Salvar Dados</button>
           </form>
         </div>
 
         <div class="card">
-          <div class="card-cabecalho"><span class="card-titulo">Segurança e Backup dos Dados</span></div>
-          <p style="font-size:0.78rem; color:var(--texto-secundario);">Seus pontos ficam gravados no aparelho. Exporte cópias de segurança em JSON.</p>
+          <div class="card-cabecalho"><span class="card-titulo">Backup dos Dados</span></div>
+          <p style="font-size:0.78rem; color:var(--texto-secundario);">Seus registros ficam salvos localmente no aparelho.</p>
           <div style="display:flex; gap:10px;">
             <button id="btn-exportar-backup" class="btn-secundario" style="flex:1;">💾 Baixar Backup</button>
             <label class="btn-secundario" style="flex:1; text-align:center; cursor:pointer;">
@@ -202,32 +238,21 @@
       </section>
     </main>
 
-    <!-- Barra de Navegação Inferior -->
+    <!-- NAVEGAÇÃO INFERIOR COM 5 ABAS -->
     <nav class="barra-navegacao-inferior">
-      <button class="btn-nav-aba ativa" data-aba="ponto">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span>Ponto</span>
-      </button>
-      <button class="btn-nav-aba" data-aba="calendario">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span>Calendário</span>
-      </button>
-      <button class="btn-nav-aba" data-aba="extrato">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        <span>Extrato</span>
-      </button>
-      <button class="btn-nav-aba" data-aba="ajustes">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="3" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span>Ajustes</span>
-      </button>
+      <button class="btn-nav-aba ativa" data-aba="ponto"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Ponto</span></button>
+      <button class="btn-nav-aba" data-aba="calendario"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Calendário</span></button>
+      <button class="btn-nav-aba" data-aba="alarme"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Alarme</span></button>
+      <button class="btn-nav-aba" data-aba="ganhos"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span>Ganhos</span></button>
+      <button class="btn-nav-aba" data-aba="ajustes"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Ajustes</span></button>
     </nav>
   </div>
 
-  <!-- Modal de Edição de Ponto -->
+  <!-- MODAIS -->
   <div id="modal-editar-ponto" class="modal-overlay">
     <div class="modal-caixa">
       <div class="modal-cabecalho"><h3>Lançamento de Ponto</h3><button id="btn-fechar-modal-ponto" class="btn-fechar-modal">✕</button></div>
-      <form id="form-editar-ponto" style="display:flex; flex-direction:column; gap:12px;">
+      <form id="form-editar-ponto" style="display:flex; flex-direction:column; gap:10px;">
         <input type="hidden" id="modal-ponto-id">
         <div class="campo-form"><label>Data</label><input type="date" id="modal-ponto-data" required></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -250,19 +275,14 @@
     </div>
   </div>
 
-  <!-- Tela de Alarme Disparado -->
   <div id="tela-alarme-modal" class="tela-alarme-disparo">
-    <div class="alarme-icone-pulsante">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    </div>
+    <div class="alarme-icone-pulsante"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
     <h2 style="font-size:1.8rem; color:#ffffff;">Hora de Acordar!</h2>
     <p style="color:#94a3b8; font-size:1.05rem; max-width:320px;">Hoje é dia de <strong>Trabalho</strong> na sua escala 1x1. Bom plantão!</p>
     <button id="btn-silenciar-alarme" class="btn-padrao" style="background:#ef4444; padding:16px 32px; font-size:1.1rem;">Silenciar Alarme</button>
   </div>
 
   <div id="area-impressao-documento"></div>
-
-  <!-- Ponto de Entrada da Aplicação -->
   <script type="module" src="app.js"></script>
 </body>
 </html>

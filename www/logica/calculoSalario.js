@@ -33,6 +33,34 @@ export class CalculoSalarioService {
   }
 
   /**
+   * Calcula os valores unitários das horas de trabalho (Base, Extra 50%, Extra 100%, Noturna)
+   */
+  static calcularValoresHoraDetalhados(config) {
+    const salarioBase = Number(config.salarioBase) || 0;
+    const divisor = Number(config.horasMensais) || 220;
+    const taxa50 = (Number(config.porcentagemExtraNormal) || 50) / 100;
+    const taxa100 = (Number(config.porcentagemExtraFolga) || 100) / 100;
+
+    const base = divisor > 0 ? (salarioBase / divisor) : 0;
+    const extra50 = base * (1 + taxa50);
+    const extra100 = base * (1 + taxa100);
+    const noturna = base * 1.20;
+
+    return {
+      valorHoraBase: base,
+      valorHoraExtra50: extra50,
+      valorHoraExtra100: extra100,
+      valorHoraNoturna: noturna,
+      formatado: {
+        valorHoraBase: this.formatarMoeda(base),
+        valorHoraExtra50: this.formatarMoeda(extra50),
+        valorHoraExtra100: this.formatarMoeda(extra100),
+        valorHoraNoturna: this.formatarMoeda(noturna)
+      }
+    };
+  }
+
+  /**
    * Realiza todo o cálculo financeiro do mês
    * @param {Object} resumoConsolidado Retorno do PontoService.consolidarMes
    * @param {Object} config Configurações salariais do usuário

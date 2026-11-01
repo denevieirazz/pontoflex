@@ -1,0 +1,90 @@
+/**
+ * Estilos do Alarme Inteligente da Escala 1x1 - PontoFlex Pro
+ */
+
+.card-alarme-hero {
+  background: radial-gradient(circle at 50% 20%, #1c263c 0%, var(--bg-card) 75%);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+.alarme-horario-grande {
+  font-size: 3.8rem;
+  font-weight: 800;
+  font-family: var(--fonte-mono);
+  color: #ffffff;
+  letter-spacing: -2px;
+  line-height: 1;
+  text-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+}
+
+.card-status-alarme-inteligente {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.card-status-alarme-inteligente.folga {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.card-status-alarme-inteligente.desativado {
+  background: rgba(148, 163, 184, 0.06);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.icone-alarme-status {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icone-alarme-status.trabalho {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.icone-alarme-status.folga {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.icone-alarme-status.desativado {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+}
+
+.texto-alarme-status h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--texto-primario);
+}
+
+.texto-alarme-status p {
+  font-size: 0.78rem;
+  color: var(--texto-secundario);
+  margin-top: 2px;
+}
+
+.lista-opcoes-alarme {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}

@@ -73,6 +73,12 @@ const configSalario = {
 const valorHora = CalculoSalarioService.calcularValorHora(configSalario.salarioBase, configSalario.horasMensais);
 assert.strictEqual(valorHora, 10, 'Valor hora deve ser exatamente R$ 10,00');
 
+const valoresDet = CalculoSalarioService.calcularValoresHoraDetalhados(configSalario);
+assert.strictEqual(valoresDet.valorHoraBase, 10, 'Hora base = 10');
+assert.strictEqual(valoresDet.valorHoraExtra50, 15, 'Hora extra 50% = 15');
+assert.strictEqual(valoresDet.valorHoraExtra100, 20, 'Hora extra 100% = 20');
+assert.strictEqual(valoresDet.valorHoraNoturna, 12, 'Hora noturna (+20%) = 12');
+
 const resumoMes = {
   totalMinutosNormais: 7200, // 120 horas
   totalMinutosExtras50: 600, // 10 horas a 50% = 10 * 15 = R$ 150

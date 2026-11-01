@@ -6,18 +6,17 @@ import { StorageService } from '../logica/storage.js';
 import { EscalaService } from '../logica/escala.js';
 import { PontoService } from '../logica/ponto.js';
 import { AlarmeService } from '../logica/alarme.js';
-import { AudioAlarmeService } from '../ferramentas/audioAlarme.js';
 import { SyncDataHoraService } from '../ferramentas/syncDataHora.js';
 import { ExportadorService } from '../ferramentas/exportador.js';
 import { UIModal } from './uiModal.js';
 import { UIRender } from './uiRender.js';
 import { UICalendario } from './uiCalendario.js';
+import { UIAlarme } from './uiAlarme.js';
+import { UIGanhos } from './uiGanhos.js';
 import { mostrarToast } from './toast.js';
 
 export class AppUI {
   static abaAtual = 'ponto';
-  static mesSelecionado = new Date().getMonth() + 1;
-  static anoSelecionado = new Date().getFullYear();
 
   static async inicializar() {
     await StorageService.inicializar();
@@ -25,10 +24,15 @@ export class AppUI {
     this.vincularNavegacaoAbas();
     this.iniciarRelogio();
     this.vincularAcoesPonto();
-    this.vincularAcoesEscalaEAlarme();
-    this.vincularAcoesExtrato();
+    this.vincularAcoesCalendario();
     this.vincularAcoesConfig();
 
+    UIAlarme.vincular(() => this.atualizarTodaInterface());
+    UIGanhos.vincular(
+      () => this.atualizarTodaInterface(),
+      (ponto) => UIModal.abrir(ponto),
+      (id) => this.excluirPonto(id)
+    );
     UIModal.vincular(() => this.atualizarTodaInterface());
     UICalendario.inicializar('container-calendario-interativo');
 
@@ -51,8 +55,13 @@ export class AppUI {
     document.querySelectorAll('.secao-aba').forEach(s => {
       s.classList.toggle('ativa', s.id === `aba-${abaAlvo}`);
     });
-    if (abaAlvo === 'calendario' || abaAlvo === 'escala') {
+
+    if (abaAlvo === 'calendario') {
       UICalendario.renderizar();
+    } else if (abaAlvo === 'alarme') {
+      UIAlarme.renderizar();
+    } else if (abaAlvo === 'ganhos') {
+      UIGanhos.renderizar();
     }
     this.atualizarTodaInterface();
   }
@@ -140,28 +149,7 @@ export class AppUI {
     });
   }
 
-  static vincularAcoesEscalaEAlarme() {
-    const switchAlarme = document.getElementById('switch-alarme-ativo');
-    switchAlarme?.addEventListener('change', (e) => {
-      StorageService.salvarConfig({ alarmeAtivo: e.target.checked });
-      mostrarToast(e.target.checked ? 'Alarme 1x1 ativado' : 'Alarme desativado', 'sucesso');
-      this.atualizarTodaInterface();
-    });
-
-    document.getElementById('btn-testar-som-alarme')?.addEventListener('click', () => {
-      const config = StorageService.obterConfig();
-      AudioAlarmeService.tocarBipeTeste(config.alarmeSom);
-      mostrarToast('Reproduzindo som de teste...', 'sucesso');
-    });
-
-    document.getElementById('btn-salvar-ajustes-alarme')?.addEventListener('click', () => {
-      const horario = document.getElementById('input-alarme-horario')?.value || '06:00';
-      const som = document.getElementById('select-alarme-som')?.value || 'suave';
-      StorageService.salvarConfig({ alarmeHorario: horario, alarmeSom: som });
-      mostrarToast('Horário do alarme salvo com sucesso', 'sucesso');
-      this.atualizarTodaInterface();
-    });
-
+  static vincularAcoesCalendario() {
     document.getElementById('btn-salvar-inicio-escala')?.addEventListener('click', () => {
       const dataInicio = document.getElementById('input-inicio-escala')?.value;
       if (!dataInicio) {
@@ -178,38 +166,25 @@ export class AppUI {
       UICalendario.alternarEscalaHoje();
       this.atualizarTodaInterface();
     });
-
-    document.getElementById('btn-silenciar-alarme')?.addEventListener('click', () => {
-      AudioAlarmeService.parar();
-      document.getElementById('tela-alarme-modal')?.classList.remove('ativa');
-    });
   }
 
-  static vincularAcoesExtrato() {
-    const inputFiltro = document.getElementById('filtro-mes-ano');
-    inputFiltro?.addEventListener('change', (e) => {
-      const [a, m] = e.target.value.split('-');
-      if (a && m) {
-        this.anoSelecionado = parseInt(a, 10);
-        this.mesSelecionado = parseInt(m, 10);
-        this.atualizarTodaInterface();
-      }
-    });
-
-    document.getElementById('btn-gerar-espelho-pdf')?.addEventListener('click', () => {
-      const config = StorageService.obterConfig();
-      const pontos = StorageService.obterPontos();
-      const resumo = PontoService.consolidarMes(pontos, this.anoSelecionado, this.mesSelecionado, config.dataInicioEscala, config.jornadaPadraoHoras);
-      const holerite = CalculoSalarioService.calcularHoleriteEstimado(resumo, config);
-      ExportadorService.imprimirEspelhoPonto(resumo, holerite, config);
-    });
-
-    document.getElementById('btn-exportar-csv')?.addEventListener('click', () => {
-      const config = StorageService.obterConfig();
-      const pontos = StorageService.obterPontos();
-      const resumo = PontoService.consolidarMes(pontos, this.anoSelecionado, this.mesSelecionado, config.dataInicioEscala, config.jornadaPadraoHoras);
-      ExportadorService.exportarCSV(resumo, config);
-      mostrarToast('Planilha CSV gerada para download!', 'sucesso');
+  static vincularAcoesConfig() {
+    const formSalario = document.getElementById('form-config-salario');
+    formSalario?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const configAtualizada = {
+        nomeUsuario: document.getElementById('config-nome')?.value || '',
+        empresa: document.getElementById('config-empresa')?.value || '',
+        cargo: document.getElementById('config-cargo')?.value || '',
+        salarioBase: parseFloat(document.getElementById('config-salario-base')?.value) || 2000,
+        horasMensais: parseInt(document.getElementById('config-horas-mensais')?.value, 10) || 220,
+        jornadaPadraoHoras: parseInt(document.getElementById('config-jornada-padrao')?.value, 10) || 8,
+        porcentagemExtraNormal: parseInt(document.getElementById('config-porcentagem-normal')?.value, 10) || 50,
+        porcentagemExtraFolga: parseInt(document.getElementById('config-porcentagem-folga')?.value, 10) || 100
+      };
+      StorageService.salvarConfig(configAtualizada);
+      mostrarToast('Configurações salvas permanentemente!', 'sucesso');
+      this.atualizarTodaInterface();
     });
 
     document.getElementById('btn-exportar-backup')?.addEventListener('click', () => {
@@ -235,24 +210,13 @@ export class AppUI {
     });
   }
 
-  static vincularAcoesConfig() {
-    const formSalario = document.getElementById('form-config-salario');
-    formSalario?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const configAtualizada = {
-        nomeUsuario: document.getElementById('config-nome')?.value || '',
-        empresa: document.getElementById('config-empresa')?.value || '',
-        cargo: document.getElementById('config-cargo')?.value || '',
-        salarioBase: parseFloat(document.getElementById('config-salario-base')?.value) || 2000,
-        horasMensais: parseInt(document.getElementById('config-horas-mensais')?.value, 10) || 220,
-        jornadaPadraoHoras: parseInt(document.getElementById('config-jornada-padrao')?.value, 10) || 8,
-        porcentagemExtraNormal: parseInt(document.getElementById('config-porcentagem-normal')?.value, 10) || 50,
-        porcentagemExtraFolga: parseInt(document.getElementById('config-porcentagem-folga')?.value, 10) || 100
-      };
-      StorageService.salvarConfig(configAtualizada);
-      mostrarToast('Configurações salvas permanentemente!', 'sucesso');
+  static excluirPonto(id) {
+    if (confirm('Deseja excluir este registro de ponto permanentemente?')) {
+      StorageService.excluirRegistro(id);
+      mostrarToast('Registro removido', 'sucesso');
       this.atualizarTodaInterface();
-    });
+      UICalendario.renderizar();
+    }
   }
 
   static atualizarTodaInterface() {
@@ -260,30 +224,28 @@ export class AppUI {
     const hojeStr = EscalaService.formatarDataISO(agora);
     const config = StorageService.obterConfig();
     const pontoHoje = StorageService.obterPontoPorData(hojeStr);
-
     const statusHoje = EscalaService.obterStatusHoje(config.dataInicioEscala);
+
     UIRender.renderizarHoje(pontoHoje, statusHoje, config);
-
-    const previsaoAlarme = AlarmeService.obterPrevisaoProximoDisparo(config);
-    UIRender.renderizarPrevisaoAlarme(previsaoAlarme);
-
-    UICalendario.renderizarFaixaHome('container-agenda-home');
-
-    UIRender.renderizarHistoricoEFinanceiro(
-      this.anoSelecionado,
-      this.mesSelecionado,
+    UIRender.renderizarChipAlarmeHome(config, () => this.trocarAba('alarme'));
+    UIRender.renderizarBannerSalarioHome(
       config,
-      (ponto) => UIModal.abrir(ponto),
-      (id) => {
-        if (confirm('Deseja excluir este registro de ponto permanentemente?')) {
-          StorageService.excluirRegistro(id);
-          mostrarToast('Registro removido', 'sucesso');
-          this.atualizarTodaInterface();
-          UICalendario.renderizar();
-        }
-      }
+      (val) => {
+        StorageService.salvarConfig({ salarioBase: val, salarioConfigurado: true });
+        mostrarToast('Salário definido com sucesso!', 'sucesso');
+        this.atualizarTodaInterface();
+      },
+      () => this.trocarAba('ganhos')
     );
 
+    UICalendario.renderizarFaixaHome('container-agenda-home');
+    UIAlarme.renderizar();
+    UIGanhos.renderizar();
     UIRender.carregarCamposConfig(config);
+
+    const inputDataEscala = document.getElementById('input-inicio-escala');
+    if (inputDataEscala && config.dataInicioEscala) {
+      inputDataEscala.value = config.dataInicioEscala;
+    }
   }
 }

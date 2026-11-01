@@ -5,6 +5,7 @@
 import { StorageService } from '../logica/storage.js';
 import { PontoService } from '../logica/ponto.js';
 import { CalculoSalarioService } from '../logica/calculoSalario.js';
+import { AlarmeService } from '../logica/alarme.js';
 
 export class UIRender {
   /**
@@ -31,10 +32,8 @@ export class UIRender {
     const elSaidaAlmoco = document.getElementById('bloco-hora-saida-almoco');
     const elRetornoAlmoco = document.getElementById('bloco-hora-retorno-almoco');
     const elSaida = document.getElementById('bloco-hora-saida');
-
     const elTotalHoje = document.getElementById('display-total-hoje');
     const elExtraHoje = document.getElementById('display-extra-hoje');
-
     const containerAcoes = document.getElementById('area-acoes-ponto-dinamicas');
 
     if (pontoHoje) {
@@ -58,7 +57,7 @@ export class UIRender {
       const minutosExtras = apuracao.minutosExtrasNormais + apuracao.minutosExtrasFolga;
       if (elExtraHoje) elExtraHoje.textContent = PontoService.minutosParaHoraStr(minutosExtras, true);
 
-      // Renderiza os botões dinâmicos de ponto conforme o estado atual
+      // Renderiza botões dinâmicos de ponto conforme o estado atual
       if (containerAcoes) {
         if (!pontoHoje.entrada) {
           containerAcoes.innerHTML = `
@@ -125,100 +124,74 @@ export class UIRender {
   }
 
   /**
-   * Atualiza a frase de previsão do alarme inteligente
+   * Renderiza o Chip do Alarme na aba Home (Ponto)
    */
-  static renderizarPrevisaoAlarme(previsao) {
-    const elTexto = document.getElementById('texto-previsao-alarme');
-    if (elTexto) {
-      elTexto.textContent = previsao.texto;
-      elTexto.style.color = previsao.vaiTocar ? '#38bdf8' : '#94a3b8';
+  static renderizarChipAlarmeHome(config, onNavegarAlarme) {
+    const elChip = document.getElementById('chip-status-alarme-home');
+    if (!elChip) return;
+
+    const previsao = AlarmeService.obterPrevisaoProximoAlarme();
+    let texto = '⏰ Alarme: Desativado (Toque p/ ativar)';
+    let cor = '#94a3b8';
+
+    if (config.alarmeAtivo) {
+      if (previsao.vaiTocar) {
+        texto = `⏰ Alarme: Toca ${previsao.quando} às ${previsao.horario} (Plantão)`;
+        cor = '#38bdf8';
+      } else {
+        texto = `😴 Alarme: Silenciado (Amanhã é folga)`;
+        cor = '#a78bfa';
+      }
     }
+
+    elChip.textContent = texto;
+    elChip.style.color = cor;
+    elChip.onclick = () => {
+      if (typeof onNavegarAlarme === 'function') onNavegarAlarme();
+    };
   }
 
   /**
-   * Renderiza os 4 KPI Cards e a listagem do histórico/extrato
+   * Renderiza o Banner de Salário na aba Home (Ponto)
    */
-  static renderizarHistoricoEFinanceiro(ano, mes, config, onEditar, onExcluir) {
-    const pontos = StorageService.obterPontos();
-    const resumo = PontoService.consolidarMes(
-      pontos, ano, mes, config.dataInicioEscala, config.jornadaPadraoHoras
-    );
-    const holerite = CalculoSalarioService.calcularHoleriteEstimado(resumo, config);
+  static renderizarBannerSalarioHome(config, onSalvarSalario, onNavegarGanhos) {
+    const container = document.getElementById('banner-salario-home');
+    if (!container) return;
 
-    // Atualiza KPIs Corporativos
-    const elKpiSalario = document.getElementById('kpi-valor-salario');
-    const elKpiHorasNormais = document.getElementById('kpi-valor-horas-normais');
-    const elKpiHorasExtras = document.getElementById('kpi-valor-horas-extras');
-    const elKpiPlantoes = document.getElementById('kpi-valor-plantoes');
-
-    if (elKpiSalario) elKpiSalario.textContent = holerite.formatado.totalBrutoEstimado;
-    if (elKpiHorasNormais) elKpiHorasNormais.textContent = PontoService.minutosParaHoraStr(resumo.totalMinutosNormais, true);
-    if (elKpiHorasExtras) elKpiHorasExtras.textContent = PontoService.minutosParaHoraStr(resumo.totalMinutosExtrasGerais, true);
-    if (elKpiPlantoes) elKpiPlantoes.textContent = `${resumo.diasTrabalhados} dias`;
-
-    // Lista de registros do histórico
-    const listaEl = document.getElementById('lista-registros-historico');
-    if (!listaEl) return;
-
-    if (resumo.registros.length === 0) {
-      listaEl.innerHTML = '<div style="text-align:center; padding:32px; color:var(--texto-suave); font-size:0.9rem;">Nenhum ponto registrado neste mês.</div>';
-      return;
-    }
-
-    listaEl.innerHTML = resumo.registros.map(r => {
-      const [a, m, dia] = r.data.split('-');
-      const dataFmt = `${dia}/${m}/${a}`;
-      const ap = r.apuracao;
-      const totalExtras = ap.minutosExtrasNormais + ap.minutosExtrasFolga;
-      const temExtra = totalExtras > 0;
-
-      let badgeTipo = ap.ehFolgaTrabalhada ?
-        '<span class="badge-status-turno folga-extra" style="font-size:0.7rem; padding:2px 8px;">Folga Trabalhada (100%)</span>' :
-        '<span class="badge-status-turno trabalho" style="font-size:0.7rem; padding:2px 8px;">Plantão 1x1</span>';
-
-      return `
-        <div class="item-registro-historico">
-          <div class="registro-topo">
-            <div class="registro-data-badge">
-              <span class="registro-data-texto">${dataFmt}</span>
-              ${badgeTipo}
-            </div>
-            ${temExtra ? `<span style="font-size:0.75rem; font-weight:700; color:#fbbf24;">+${PontoService.minutosParaHoraStr(totalExtras, true)} HE</span>` : ''}
+    if (!config.salarioConfigurado) {
+      container.innerHTML = `
+        <div class="card-banner-salario">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.85rem; font-weight:700; color:#34d399;">💰 Quanto você ganha por mês?</span>
+            <span style="font-size:0.7rem; color:var(--texto-secundario);">Cálculo CLT 1x1</span>
           </div>
-
-          <div class="registro-horarios-linha">
-            <span>Entrada: <strong>${r.entrada || '--:--'}</strong></span>
-            <span>Almoço: <strong>${r.saidaAlmoco ? `${r.saidaAlmoco} às ${r.retornoAlmoco || '--:--'}` : 'N/A'}</strong></span>
-            <span>Saída: <strong>${r.saida || '--:--'}</strong></span>
-          </div>
-
-          <div class="registro-rodape-resumo">
-            <span>Total Trabalhado: <strong>${PontoService.minutosParaHoraStr(ap.totalMinutos, true)}</strong></span>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-secundario btn-editar-item" data-id="${r.id}" style="padding:4px 10px; font-size:0.75rem;">Editar</button>
-              <button class="btn-secundario btn-excluir-item" data-id="${r.id}" style="padding:4px 10px; font-size:0.75rem; color:#ef4444;">Excluir</button>
-            </div>
+          <p style="font-size:0.76rem; color:var(--texto-secundario);">Informe seu salário para calcularmos suas horas extras (50% e 100%) em tempo real:</p>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="input-salario-home" placeholder="Ex: 2500" value="${config.salarioBase || ''}" style="flex:1; background:var(--bg-input); border:1px solid var(--cor-borda); color:#fff; padding:8px 12px; border-radius:var(--radius-sm); font-size:0.85rem;">
+            <button id="btn-salvar-salario-home" class="btn-padrao" style="padding:8px 14px; font-size:0.82rem; white-space:nowrap;">Salvar Salário</button>
           </div>
         </div>
       `;
-    }).join('');
-
-    listaEl.querySelectorAll('.btn-editar-item').forEach(b => {
-      b.addEventListener('click', () => {
-        const ponto = pontos.find(p => p.id === b.dataset.id);
-        if (ponto && typeof onEditar === 'function') onEditar(ponto);
+      document.getElementById('btn-salvar-salario-home')?.addEventListener('click', () => {
+        const val = parseFloat(document.getElementById('input-salario-home')?.value) || 0;
+        if (typeof onSalvarSalario === 'function') onSalvarSalario(val);
       });
-    });
-
-    listaEl.querySelectorAll('.btn-excluir-item').forEach(b => {
-      b.addEventListener('click', () => {
-        if (typeof onExcluir === 'function') onExcluir(b.dataset.id);
+    } else {
+      const valorHora = (config.salarioBase / (config.horasMensais || 220));
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); border:1px solid var(--cor-borda); border-radius:var(--radius-sm); padding:8px 12px; font-size:0.78rem;">
+          <span style="color:var(--texto-secundario);">💰 Salário: <strong style="color:#fff;">${CalculoSalarioService.formatarMoeda(config.salarioBase)}</strong> (${CalculoSalarioService.formatarMoeda(valorHora)}/h)</span>
+          <button id="btn-abrir-ganhos-home" class="btn-secundario" style="font-size:0.72rem; padding:4px 8px;">Ganhos ↗</button>
+        </div>
+      `;
+      document.getElementById('btn-abrir-ganhos-home')?.addEventListener('click', () => {
+        if (typeof onNavegarGanhos === 'function') onNavegarGanhos();
       });
-    });
+    }
   }
 
   /**
-   * Preenche os formulários da aba de configurações
+   * Preenche os formulários da aba de configurações (Ajustes)
    */
   static carregarCamposConfig(config) {
     const setVal = (id, val) => {
@@ -233,11 +206,5 @@ export class UIRender {
     setVal('config-jornada-padrao', config.jornadaPadraoHoras || 8);
     setVal('config-porcentagem-normal', config.porcentagemExtraNormal || 50);
     setVal('config-porcentagem-folga', config.porcentagemExtraFolga || 100);
-    setVal('input-inicio-escala', config.dataInicioEscala || '');
-    setVal('input-alarme-horario', config.alarmeHorario || '06:00');
-    setVal('select-alarme-som', config.alarmeSom || 'suave');
-
-    const switchAlarme = document.getElementById('switch-alarme-ativo');
-    if (switchAlarme) switchAlarme.checked = !!config.alarmeAtivo;
   }
 }

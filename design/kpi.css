@@ -95,3 +95,73 @@
   font-size: 0.72rem;
   color: var(--texto-suave);
 }
+
+/* Grade de Valores Unitários da Hora (Ganhos) */
+.grid-valores-hora {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.card-valor-hora {
+  background: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.card-valor-hora .rotulo {
+  font-size: 0.7rem;
+  color: var(--texto-secundario);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.card-valor-hora .valor {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: var(--fonte-mono);
+  color: var(--texto-primario);
+}
+
+.card-valor-hora .valor.azul { color: #38bdf8; }
+.card-valor-hora .valor.verde { color: #34d399; }
+.card-valor-hora .valor.ambar { color: #fbbf24; }
+.card-valor-hora .valor.roxo { color: #a78bfa; }
+
+/* Banner de Salário e Chip de Alarme */
+.chip-alarme-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #38bdf8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.chip-alarme-home:hover {
+  background: rgba(56, 189, 248, 0.16);
+}
+
+.card-banner-salario {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(56, 189, 248, 0.12));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
