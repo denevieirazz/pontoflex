@@ -28,12 +28,12 @@ body {
   flex-direction: column;
   position: relative;
   background-color: var(--bg-app);
-  padding-bottom: 90px; /* Espaço para a barra de navegação inferior */
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 16px));
 }
 
-/* Cabeçalho Principal */
+/* Cabeçalho Principal com Safe Area */
 .cabecalho-app {
-  padding: 16px 20px 12px 20px;
+  padding: max(14px, env(safe-area-inset-top, 14px)) 16px 12px 16px;
   background-color: rgba(11, 15, 25, 0.92);
   backdrop-filter: blur(12px);
   position: sticky;
@@ -144,21 +144,22 @@ body {
   gap: 16px;
 }
 
-/* Barra de Navegação Inferior (Bottom Bar) */
+/* Barra de Navegação Inferior (Bottom Bar) com Safe Area */
 .barra-navegacao-inferior {
   position: fixed;
   bottom: 0;
   width: 100%;
   max-width: 520px;
-  height: 72px;
-  background-color: rgba(19, 28, 46, 0.95);
+  min-height: 64px;
+  height: auto;
+  background-color: rgba(19, 28, 46, 0.96);
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--cor-borda);
   display: flex;
   justify-content: space-around;
   align-items: center;
   z-index: 50;
-  padding: 0 8px;
+  padding: 6px 4px max(8px, env(safe-area-inset-bottom, 8px)) 4px;
 }
 
 .btn-nav-aba {
@@ -168,22 +169,32 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 3px;
   cursor: pointer;
-  padding: 6px 4px;
+  padding: 4px 2px;
   border-radius: var(--radius-md);
-  font-size: 0.68rem;
+  font-size: clamp(0.56rem, 2.3vw, 0.72rem);
   font-weight: 500;
   transition: var(--transicao-rapida);
   flex: 1;
+  min-width: 0;
+}
+
+.btn-nav-aba span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .btn-nav-aba svg {
-  width: 22px;
-  height: 22px;
+  width: clamp(18px, 4.8vw, 22px);
+  height: clamp(18px, 4.8vw, 22px);
   stroke: currentColor;
   stroke-width: 2;
   fill: none;
+  flex-shrink: 0;
   transition: var(--transicao-rapida);
 }
 
@@ -194,6 +205,17 @@ body {
 .btn-nav-aba.ativa svg {
   transform: translateY(-2px);
   stroke: #38bdf8;
+}
+
+/* Responsividade para telas ultra-compactas (<= 360px) */
+@media (max-width: 360px) {
+  .conteudo-principal {
+    padding: 10px;
+    gap: 12px;
+  }
+  .cabecalho-app {
+    padding: max(10px, env(safe-area-inset-top, 10px)) 12px 10px 12px;
+  }
 }
 
 /* Animações Básicas */

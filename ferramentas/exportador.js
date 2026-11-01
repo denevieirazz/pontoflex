@@ -166,15 +166,10 @@ export class ExportadorService {
   }
 
   /**
-   * Baixa arquivo JSON de backup
+   * Aciona a exportação de backup completo
    */
-  static baixarBackupJSON(conteudoJSON) {
-    const blob = new Blob([conteudoJSON], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `backup_ponto_escala_${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+  static async baixarBackupJSON() {
+    const { BackupService } = await import('./backup.js');
+    return BackupService.exportarBackup();
   }
 }

@@ -31,17 +31,18 @@
 }
 
 .bloco-ponto-tempo .rotulo-mini {
-  font-size: 0.68rem;
+  font-size: clamp(0.58rem, 2vw, 0.68rem);
   color: var(--texto-secundario);
   font-weight: 600;
   text-transform: uppercase;
 }
 
 .bloco-ponto-tempo .valor-hora {
-  font-size: 1.05rem;
+  font-size: clamp(0.82rem, 3.2vw, 1.05rem);
   font-weight: 700;
   font-family: var(--fonte-mono);
   color: var(--texto-primario);
+  white-space: nowrap;
 }
 
 .bloco-ponto-tempo.ativo {
@@ -89,11 +90,12 @@
 }
 
 .kpi-valor {
-  font-size: 1.35rem;
+  font-size: clamp(1.05rem, 4vw, 1.35rem);
   font-weight: 800;
   font-family: var(--fonte-mono);
   color: var(--texto-primario);
   margin-top: 2px;
+  word-break: break-word;
 }
 
 .kpi-valor.destaque-azul { color: #38bdf8; }

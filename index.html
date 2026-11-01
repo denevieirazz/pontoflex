@@ -160,11 +160,12 @@
           </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <input type="month" id="filtro-mes-ano" style="background:var(--bg-card); border:1px solid var(--cor-borda); color:#fff; padding:8px 12px; border-radius:var(--radius-md); font-weight:700;">
           <div style="display:flex; gap:6px;">
-            <button id="btn-gerar-espelho-pdf" class="btn-padrao" style="font-size:0.78rem; padding:8px 12px;">📄 PDF</button>
-            <button id="btn-exportar-csv" class="btn-secundario" style="font-size:0.78rem; padding:8px 12px;">📊 CSV</button>
+            <button id="btn-gerar-espelho-pdf" class="btn-padrao" style="font-size:0.75rem; padding:8px 10px;">📄 PDF</button>
+            <button id="btn-exportar-csv" class="btn-secundario" style="font-size:0.75rem; padding:8px 10px;">📊 CSV</button>
+            <button id="btn-backup-rapido-ganhos" class="btn-secundario" style="font-size:0.75rem; padding:8px 10px;" title="Cópia de Segurança">💾 Backup</button>
           </div>
         </div>
 
@@ -228,13 +229,13 @@
         </div>
 
         <div class="card">
-          <div class="card-cabecalho"><span class="card-titulo">Backup dos Dados</span></div>
-          <p style="font-size:0.78rem; color:var(--texto-secundario);">Seus registros ficam salvos localmente no aparelho.</p>
-          <div style="display:flex; gap:10px;">
-            <button id="btn-exportar-backup" class="btn-secundario" style="flex:1;">💾 Baixar Backup</button>
-            <label class="btn-secundario" style="flex:1; text-align:center; cursor:pointer;">
-              📂 Restaurar
-              <input type="file" id="input-importar-backup" accept=".json" style="display:none;">
+          <div class="card-cabecalho"><span class="card-titulo">💾 Cópia de Segurança & Restauração</span></div>
+          <p style="font-size:0.8rem; color:var(--texto-secundario); line-height:1.4;">Salve seus registros para não perder nada ao atualizar o aplicativo ou trocar de aparelho.</p>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <button id="btn-exportar-backup" class="btn-padrao" style="width:100%; display:flex; justify-content:center; align-items:center; gap:8px; font-weight:700;">💾 Salvar Cópia de Segurança (Exportar)</button>
+            <label class="btn-secundario" style="width:100%; display:flex; justify-content:center; align-items:center; gap:8px; cursor:pointer; text-align:center;">
+              📂 Restaurar Meus Dados (Importar)
+              <input type="file" id="input-importar-backup" accept=".json,application/json" style="display:none;">
             </label>
           </div>
         </div>

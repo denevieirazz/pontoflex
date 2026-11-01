@@ -35,6 +35,7 @@ const ARQUIVOS_CACHE = [
   './logica/alarme.js',
   './ferramentas/audioAlarme.js',
   './ferramentas/exportador.js',
+  './ferramentas/backup.js',
   './ferramentas/syncDataHora.js',
   './ferramentas/atualizador.js',
   './icons/icon-192.png',

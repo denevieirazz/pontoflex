@@ -8,6 +8,7 @@ import { PontoService } from '../logica/ponto.js';
 import { AlarmeService } from '../logica/alarme.js';
 import { SyncDataHoraService } from '../ferramentas/syncDataHora.js';
 import { ExportadorService } from '../ferramentas/exportador.js';
+import { BackupService } from '../ferramentas/backup.js';
 import { UIModal } from './uiModal.js';
 import { UIRender } from './uiRender.js';
 import { UICalendario } from './uiCalendario.js';
@@ -204,26 +205,36 @@ export class AppUI {
       this.atualizarTodaInterface();
     });
 
-    document.getElementById('btn-exportar-backup')?.addEventListener('click', () => {
-      ExportadorService.baixarBackupJSON();
-      mostrarToast('Backup JSON completo salvo!', 'sucesso');
-    });
+    const exportarDados = async () => {
+      try {
+        const res = await BackupService.exportarBackup();
+        if (res && res.sucesso) {
+          const msg = res.metodo === 'compartilhado' ? 'Backup compartilhado com sucesso!' : `Backup baixado: ${res.nomeArquivo}`;
+          mostrarToast(msg, 'sucesso');
+        }
+      } catch (err) {
+        mostrarToast('Erro ao exportar backup: ' + err.message, 'erro');
+      }
+    };
 
-    document.getElementById('input-importar-backup')?.addEventListener('change', (e) => {
+    document.getElementById('btn-exportar-backup')?.addEventListener('click', exportarDados);
+    document.getElementById('btn-backup-rapido-ganhos')?.addEventListener('click', exportarDados);
+
+    document.getElementById('input-importar-backup')?.addEventListener('change', async (e) => {
       const arquivo = e.target.files?.[0];
       if (!arquivo) return;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        const resultado = StorageService.importarDeJSON(evt.target.result);
-        if (resultado.sucesso) {
-          mostrarToast(`Backup restaurado! ${resultado.totalPontos} pontos carregados.`, 'sucesso');
+      try {
+        const res = await BackupService.restaurarDeArquivo(arquivo);
+        if (res.sucesso) {
+          mostrarToast(`Backup restaurado! ${res.totalPontos} pontos e salário de ${res.salarioBase} carregados.`, 'sucesso');
           this.atualizarTodaInterface();
           UICalendario.renderizar();
-        } else {
-          mostrarToast('Erro ao importar backup: ' + resultado.erro, 'erro');
+          e.target.value = '';
         }
-      };
-      reader.readAsText(arquivo);
+      } catch (err) {
+        mostrarToast('Erro ao importar backup: ' + err.message, 'erro');
+        e.target.value = '';
+      }
     });
   }
 

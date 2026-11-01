@@ -58,7 +58,7 @@
 }
 
 .relogio-digital {
-  font-size: 3.4rem;
+  font-size: clamp(2.3rem, 10vw, 3.4rem);
   font-weight: 800;
   font-family: var(--fonte-mono);
   font-feature-settings: "tnum";
@@ -66,10 +66,11 @@
   color: #ffffff;
   text-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
   line-height: 1;
+  white-space: nowrap;
 }
 
 .relogio-segundos {
-  font-size: 1.6rem;
+  font-size: clamp(1.1rem, 5vw, 1.6rem);
   color: #38bdf8;
   font-weight: 500;
 }
@@ -132,18 +133,18 @@
 .btn-bater-ponto-principal {
   width: 100%;
   max-width: 320px;
-  padding: 16px 24px;
+  padding: clamp(13px, 3.8vw, 16px) clamp(16px, 4.5vw, 24px);
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   background: linear-gradient(135deg, #10b981, #059669);
   color: #ffffff;
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: clamp(0.92rem, 3.6vw, 1.05rem);
   letter-spacing: 0.5px;
   box-shadow: 0 6px 20px -2px rgba(16, 185, 129, 0.45);
   transition: transform 0.15s ease, box-shadow 0.2s ease;
@@ -162,22 +163,23 @@
 .botoes-ponto-duplos {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   max-width: 340px;
 }
 
 .btn-acao-ponto-sec {
-  padding: 13px 14px;
+  padding: clamp(10px, 3vw, 13px) clamp(8px, 2.5vw, 14px);
   border-radius: var(--radius-md);
   border: 1px solid var(--cor-borda);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: clamp(0.76rem, 2.6vw, 0.85rem);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
+  white-space: nowrap;
   transition: var(--transicao-rapida);
 }
 

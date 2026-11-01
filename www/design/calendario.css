@@ -79,9 +79,9 @@
 .grade-dias-semana {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  gap: clamp(3px, 1vw, 6px);
   text-align: center;
-  font-size: 0.72rem;
+  font-size: clamp(0.6rem, 2vw, 0.72rem);
   font-weight: 700;
   color: var(--texto-suave);
   text-transform: uppercase;
@@ -91,15 +91,15 @@
 .grade-mes-dias {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  gap: clamp(3px, 1vw, 6px);
 }
 
 .celula-dia {
-  min-height: 58px;
+  min-height: clamp(44px, 11vw, 58px);
   background: var(--bg-card);
   border: 1px solid var(--cor-borda);
   border-radius: var(--radius-sm);
-  padding: 6px 4px;
+  padding: clamp(3px, 1vw, 6px) clamp(2px, 0.8vw, 4px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -126,7 +126,7 @@
 }
 
 .celula-dia-numero {
-  font-size: 0.85rem;
+  font-size: clamp(0.74rem, 2.4vw, 0.85rem);
   font-weight: 700;
   font-family: var(--fonte-mono);
   color: var(--texto-primario);
@@ -137,9 +137,9 @@
 }
 
 .celula-dia-badge {
-  font-size: 0.62rem;
+  font-size: clamp(0.52rem, 1.6vw, 0.62rem);
   font-weight: 700;
-  padding: 2px 4px;
+  padding: 2px 2px;
   border-radius: 4px;
   text-align: center;
   width: 100%;
