@@ -209,6 +209,13 @@ export class StorageService {
         this.cacheConfig = { ...CONFIG_PADRAO };
       }
     }
+    if (!this.cacheConfig.dataInicioEscala) {
+      const h = new Date();
+      const a = h.getFullYear();
+      const m = String(h.getMonth() + 1).padStart(2, '0');
+      const d = String(h.getDate()).padStart(2, '0');
+      this.cacheConfig.dataInicioEscala = `${a}-${m}-${d}`;
+    }
     return { ...this.cacheConfig };
   }
 

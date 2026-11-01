@@ -80,22 +80,32 @@
             <strong id="display-extra-hoje" style="color:var(--cor-extra); font-family:var(--fonte-mono);">0h 00m</strong>
           </div>
         </div>
+
+        <!-- Visão Rápida da Escala no Home -->
+        <div class="card">
+          <div class="card-cabecalho">
+            <span class="card-titulo">Próximos Dias (Escala 1x1)</span>
+            <button id="btn-ver-calendario-completo" class="btn-secundario" style="font-size:0.75rem; padding:4px 10px;">Ver Mês Inteiro 📅</button>
+          </div>
+          <div id="container-agenda-home"></div>
+        </div>
       </section>
 
-      <!-- ABA 2: ESCALA 1X1 & ALARME INTELIGENTE -->
-      <section id="aba-escala" class="secao-aba">
+      <!-- ABA 2: CALENDÁRIO DA ESCALA 1X1 & ALARME -->
+      <section id="aba-calendario" class="secao-aba">
         <div class="card">
           <div id="container-calendario-interativo"></div>
         </div>
 
         <div class="card">
           <div class="card-cabecalho">
-            <span class="card-titulo">Sincronia da Escala 1x1</span>
+            <span class="card-titulo">Ajuste Rápido da Escala 1x1</span>
           </div>
-          <p style="font-size:0.78rem; color:var(--texto-secundario);">Informe um dia de <strong>trabalho (plantão)</strong> para a escala alternar automaticamente.</p>
-          <div style="display:flex; gap:10px;">
+          <p style="font-size:0.78rem; color:var(--texto-secundario);">Se hoje é seu dia de folga ou trabalho trocado, inverta com 1 clique:</p>
+          <button id="btn-inverter-escala" class="btn-secundario" style="width:100%; padding:10px; font-weight:700;">🔄 Inverter Escala (Hoje Folga ⟷ Plantão)</button>
+          <div style="display:flex; gap:10px; margin-top:8px;">
             <input type="date" id="input-inicio-escala" style="flex:1; background:var(--bg-input); border:1px solid var(--cor-borda); color:#fff; padding:10px; border-radius:var(--radius-sm);">
-            <button id="btn-salvar-inicio-escala" class="btn-padrao" style="padding:10px 16px;">Salvar</button>
+            <button id="btn-salvar-inicio-escala" class="btn-padrao" style="padding:10px 16px;">Salvar Data</button>
           </div>
         </div>
 
@@ -198,9 +208,9 @@
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span>Ponto</span>
       </button>
-      <button class="btn-nav-aba" data-aba="escala">
+      <button class="btn-nav-aba" data-aba="calendario">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span>Escala 1x1</span>
+        <span>Calendário</span>
       </button>
       <button class="btn-nav-aba" data-aba="extrato">
         <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>

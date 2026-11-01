@@ -20,10 +20,8 @@ export class AppUI {
   static anoSelecionado = new Date().getFullYear();
 
   static async inicializar() {
-    // 1. Aguarda carregamento indestrutível de dados (Android SharedPreferences + IndexedDB + LocalStorage)
     await StorageService.inicializar();
 
-    // 2. Vincula componentes e eventos da tela
     this.vincularNavegacaoAbas();
     this.iniciarRelogio();
     this.vincularAcoesPonto();
@@ -53,7 +51,7 @@ export class AppUI {
     document.querySelectorAll('.secao-aba').forEach(s => {
       s.classList.toggle('ativa', s.id === `aba-${abaAlvo}`);
     });
-    if (abaAlvo === 'escala') {
+    if (abaAlvo === 'calendario' || abaAlvo === 'escala') {
       UICalendario.renderizar();
     }
     this.atualizarTodaInterface();
@@ -136,6 +134,10 @@ export class AppUI {
       const hojeStr = EscalaService.formatarDataISO(agora);
       UIModal.abrirModalEdicao(hojeStr);
     });
+
+    document.getElementById('btn-ver-calendario-completo')?.addEventListener('click', () => {
+      this.trocarAba('calendario');
+    });
   }
 
   static vincularAcoesEscalaEAlarme() {
@@ -169,6 +171,11 @@ export class AppUI {
       StorageService.salvarConfig({ dataInicioEscala: dataInicio });
       mostrarToast('Início da escala 1x1 atualizado!', 'sucesso');
       UICalendario.renderizar();
+      this.atualizarTodaInterface();
+    });
+
+    document.getElementById('btn-inverter-escala')?.addEventListener('click', () => {
+      UICalendario.alternarEscalaHoje();
       this.atualizarTodaInterface();
     });
 
@@ -259,6 +266,8 @@ export class AppUI {
 
     const previsaoAlarme = AlarmeService.obterPrevisaoProximoDisparo(config);
     UIRender.renderizarPrevisaoAlarme(previsaoAlarme);
+
+    UICalendario.renderizarFaixaHome('container-agenda-home');
 
     UIRender.renderizarHistoricoEFinanceiro(
       this.anoSelecionado,

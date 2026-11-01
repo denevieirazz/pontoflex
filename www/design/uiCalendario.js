@@ -5,6 +5,7 @@
 import { StorageService } from '../logica/storage.js';
 import { EscalaService } from '../logica/escala.js';
 import { UIModal } from './uiModal.js';
+import { mostrarToast } from './toast.js';
 
 export class UICalendario {
   static anoAtual = new Date().getFullYear();
@@ -12,8 +13,8 @@ export class UICalendario {
 
   static inicializar(containerId) {
     this.container = document.getElementById(containerId);
-    if (!this.container) return;
     this.renderizar();
+    this.renderizarFaixaHome('container-agenda-home');
   }
 
   static navegarMes(delta) {
@@ -35,6 +36,63 @@ export class UICalendario {
     this.renderizar();
   }
 
+  static alternarEscalaHoje() {
+    const config = StorageService.obterConfig();
+    const hoje = new Date();
+    const hojeStr = EscalaService.formatarDataISO(hoje);
+    const eraTrabalho = EscalaService.isDiaDeTrabalho(hojeStr, config.dataInicioEscala);
+
+    // Se hoje era trabalho, definimos a data de início para ontem (tornando hoje folga)
+    const novaRef = new Date(hoje);
+    if (eraTrabalho) {
+      novaRef.setDate(hoje.getDate() - 1);
+    }
+    const novaRefStr = EscalaService.formatarDataISO(novaRef);
+    StorageService.salvarConfig({ dataInicioEscala: novaRefStr });
+    mostrarToast('Escala 1x1 invertida com sucesso!', 'sucesso');
+    this.renderizar();
+    this.renderizarFaixaHome('container-agenda-home');
+  }
+
+  static renderizarFaixaHome(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const config = StorageService.obterConfig();
+    const hoje = new Date();
+    const dias = [-1, 0, 1, 2, 3];
+    const nomesSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+    let html = `<div class="faixa-dias-agenda">`;
+    for (const offset of dias) {
+      const d = new Date(hoje);
+      d.setDate(hoje.getDate() + offset);
+      const dataStr = EscalaService.formatarDataISO(d);
+      const isTrabalho = EscalaService.isDiaDeTrabalho(dataStr, config.dataInicioEscala);
+      const isHoje = offset === 0;
+
+      let rotulo = offset === -1 ? 'Ontem' : (offset === 0 ? 'Hoje' : (offset === 1 ? 'Amanhã' : nomesSemana[d.getDay()]));
+
+      html += `
+        <div class="item-dia-agenda ${isHoje ? 'hoje' : ''}" data-data="${dataStr}">
+          <span class="dia-semana">${rotulo}</span>
+          <span class="dia-num">${d.getDate()}</span>
+          <span class="status-badge celula-dia-badge ${isTrabalho ? 'trabalho' : 'folga'}">
+            ${isTrabalho ? 'Plantão' : 'Folga'}
+          </span>
+        </div>
+      `;
+    }
+    html += `</div>`;
+    container.innerHTML = html;
+
+    container.querySelectorAll('.item-dia-agenda').forEach(el => {
+      el.addEventListener('click', () => {
+        UIModal.abrirModalEdicao(el.dataset.data);
+      });
+    });
+  }
+
   static renderizar() {
     if (!this.container) return;
 
@@ -50,10 +108,9 @@ export class UICalendario {
     const dataHoje = new Date();
     const hojeStr = EscalaService.formatarDataISO(dataHoje);
 
-    // Primeiro dia do mês e total de dias
     const primeiroDia = new Date(this.anoAtual, this.mesAtual - 1, 1);
     const ultimoDia = new Date(this.anoAtual, this.mesAtual, 0);
-    const diaSemanaInicio = primeiroDia.getDay(); // 0 (Dom) a 6 (Sáb)
+    const diaSemanaInicio = primeiroDia.getDay();
     const totalDias = ultimoDia.getDate();
 
     let html = `
@@ -84,12 +141,10 @@ export class UICalendario {
         <div class="grade-mes-dias">
     `;
 
-    // Células vazias do início da semana
     for (let i = 0; i < diaSemanaInicio; i++) {
       html += `<div class="celula-dia outro-mes"></div>`;
     }
 
-    // Dias do mês
     for (let dia = 1; dia <= totalDias; dia++) {
       const dataStr = `${this.anoAtual}-${String(this.mesAtual).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
       const isTrabalhoEscala = EscalaService.isDiaDeTrabalho(dataStr, config.dataInicioEscala);
@@ -124,16 +179,13 @@ export class UICalendario {
 
     this.container.innerHTML = html;
 
-    // Vincular botões
     document.getElementById('btn-cal-ant')?.addEventListener('click', () => this.navegarMes(-1));
     document.getElementById('btn-cal-prox')?.addEventListener('click', () => this.navegarMes(1));
     document.getElementById('btn-cal-hoje')?.addEventListener('click', () => this.irParaHoje());
 
-    // Vincular clique nas células
     this.container.querySelectorAll('.celula-dia:not(.outro-mes)').forEach(el => {
       el.addEventListener('click', () => {
-        const dataClicada = el.dataset.data;
-        UIModal.abrirModalEdicao(dataClicada);
+        UIModal.abrirModalEdicao(el.dataset.data);
       });
     });
   }
