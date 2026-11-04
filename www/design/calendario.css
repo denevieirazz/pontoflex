@@ -75,6 +75,7 @@
 .legenda-cor.trabalho { background-color: #10b981; }
 .legenda-cor.folga { background-color: #3b82f6; }
 .legenda-cor.folga-trabalhada { background-color: #f59e0b; }
+.legenda-cor.feriado { background-color: #ec4899; }
 
 .grade-dias-semana {
   display: grid;
@@ -161,6 +162,36 @@
 .celula-dia-badge.folga-trabalhada {
   background: rgba(245, 158, 11, 0.2);
   color: #fbbf24;
+}
+
+.celula-dia-badge.feriado {
+  background: rgba(236, 72, 153, 0.2);
+  color: #f472b6;
+  font-weight: 800;
+}
+
+.celula-dia-badge.feriado-trabalhado {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(236, 72, 153, 0.35));
+  color: #fde047;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  font-weight: 800;
+}
+
+.celula-dia.feriado {
+  border-color: rgba(236, 72, 153, 0.35);
+  background: rgba(236, 72, 153, 0.04);
+}
+
+.dia-feriado-mini {
+  font-size: clamp(0.46rem, 1.3vw, 0.56rem);
+  color: #f472b6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.1;
 }
 
 .ponto-marcado-dot {

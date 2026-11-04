@@ -6,17 +6,32 @@ import { StorageService } from '../logica/storage.js';
 import { PontoService } from '../logica/ponto.js';
 import { CalculoSalarioService } from '../logica/calculoSalario.js';
 import { AlarmeService } from '../logica/alarme.js';
+import { FeriadosService } from '../logica/feriados.js';
 
 export class UIRender {
   /**
    * Renderiza os cards e botões do dia atual na aba Ponto
    */
   static renderizarHoje(pontoHoje, statusHoje, config) {
+    const dataHojeStr = pontoHoje ? pontoHoje.data : new Date().toISOString().slice(0, 10);
+    const feriadoHoje = FeriadosService.obterFeriado(dataHojeStr);
+
     const badgeHoje = document.getElementById('badge-status-turno-hoje');
     if (badgeHoje) {
       let classe = 'folga';
       let rotulo = '🔵 Folga Prevista';
-      if (statusHoje.isTrabalho) {
+      if (feriadoHoje) {
+        if (pontoHoje && pontoHoje.entrada) {
+          classe = 'feriado';
+          rotulo = `🇧🇷 Plantão em Feriado (100%) - ${feriadoHoje.nome}`;
+        } else if (statusHoje.isTrabalho) {
+          classe = 'feriado';
+          rotulo = `🇧🇷 Plantão no Feriado (100%) - ${feriadoHoje.nome}`;
+        } else {
+          classe = 'feriado';
+          rotulo = `🇧🇷 Feriado Nacional: ${feriadoHoje.nome}`;
+        }
+      } else if (statusHoje.isTrabalho) {
         classe = 'trabalho';
         rotulo = '🟢 Plantão 1x1 Hoje';
       } else if (pontoHoje && pontoHoje.entrada) {
@@ -48,6 +63,7 @@ export class UIRender {
         );
 
       const apuracao = PontoService.apurarHorasDoDia({
+        data: pontoHoje.data,
         minutosTrabalhados: minTrab,
         isDiaTrabalhoEscala: statusHoje.isTrabalho,
         jornadaPadraoHoras: config.jornadaPadraoHoras

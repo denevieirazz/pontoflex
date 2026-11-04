@@ -9,6 +9,7 @@ import { PontoService } from './logica/ponto.js';
 import { CalculoSalarioService } from './logica/calculoSalario.js';
 import { AlarmeService } from './logica/alarme.js';
 import { StorageService } from './logica/storage.js';
+import { FeriadosService } from './logica/feriados.js';
 
 console.log('🧪 INICIANDO TESTES COMPLETOS...\n');
 
@@ -38,28 +39,50 @@ const minNoturno = PontoService.calcularMinutosTrabalhados('22:00', '06:00', '',
 assert.strictEqual(minNoturno, 480, 'Turno noturno 22h-06h deve ter 480 minutos');
 console.log('✅ Apuração de Horas e Turno Noturno: 100% aprovada!');
 
-// 3. TESTE DE HORAS EXTRAS (50% e 100%)
-console.log('\n--- 3. TESTANDO HORAS EXTRAS (50% e 100%) ---');
-// Dia normal de trabalho: jornada padrão 8h (480 min), trabalhou 10h (600 min) -> 2h extras (120 min) a 50%
-const apuracaoNormal = PontoService.apurarHorasDoDia({
+// 3. TESTE DE HORAS EXTRAS (50% e 100%) COM DIAS DE SEMANA, FIM DE SEMANA E FERIADOS
+console.log('\n--- 3. TESTANDO HORAS EXTRAS (50% e 100%) COM FIM DE SEMANA E FERIADOS ---');
+// 3.1 Dia de semana útil (Segunda 2026-11-09): 8h padrão, fez 10h -> 2h a 50%
+const apSegunda = PontoService.apurarHorasDoDia({
+  data: '2026-11-09',
   minutosTrabalhados: 600,
   isDiaTrabalhoEscala: true,
   jornadaPadraoHoras: 8
 });
-assert.strictEqual(apuracaoNormal.minutosNormais, 480, 'Minutos normais devem ser 480');
-assert.strictEqual(apuracaoNormal.minutosExtrasNormais, 120, 'Minutos extras 50% devem ser 120 (2h)');
-assert.strictEqual(apuracaoNormal.minutosExtrasFolga, 0, 'Não deve ter extra folga em dia de trabalho');
+assert.strictEqual(apSegunda.minutosNormais, 480, 'Segunda: minutos normais = 480');
+assert.strictEqual(apSegunda.minutosExtrasNormais, 120, 'Segunda: extras normais a 50% = 120 (2h)');
+assert.strictEqual(apSegunda.minutosExtrasFolga, 0, 'Segunda: sem extras 100%');
 
-// Dia de FOLGA trabalhado: trabalhou 8h (480 min) em dia de folga -> 8h extras (480 min) a 100%!
-const apuracaoFolga = PontoService.apurarHorasDoDia({
+// 3.2 Fim de semana (Sábado 2026-11-07): 8h padrão, fez 10h -> horas extras no fim de semana vão a 100%!
+const apSabado = PontoService.apurarHorasDoDia({
+  data: '2026-11-07',
+  minutosTrabalhados: 600,
+  isDiaTrabalhoEscala: true,
+  jornadaPadraoHoras: 8
+});
+assert.strictEqual(apSabado.minutosNormais, 480, 'Sábado: minutos normais = 480');
+assert.strictEqual(apSabado.minutosExtrasFolga, 120, 'Sábado: extras no fim de semana vão a 100% (120 min)');
+assert.strictEqual(apSabado.minutosExtrasNormais, 0, 'Sábado: sem extras a 50%');
+
+// 3.3 Feriado Brasileiro (20/11/2026 Consciência Negra): todo o trabalho no feriado vai a 100%!
+assert.strictEqual(FeriadosService.ehFeriado('2026-11-20'), true, '20/11 deve ser reconhecido como Feriado');
+const apFeriado = PontoService.apurarHorasDoDia({
+  data: '2026-11-20',
+  minutosTrabalhados: 480,
+  isDiaTrabalhoEscala: true,
+  jornadaPadraoHoras: 8
+});
+assert.strictEqual(apFeriado.ehFeriado, true, 'Deve marcar como dia de feriado');
+assert.strictEqual(apFeriado.minutosExtrasFolga, 480, 'Feriado trabalhado vai integralmente a 100%');
+
+// 3.4 Folga da escala 1x1 trabalhada em dia útil: vai a 100%!
+const apFolga = PontoService.apurarHorasDoDia({
+  data: '2026-11-10',
   minutosTrabalhados: 480,
   isDiaTrabalhoEscala: false,
   jornadaPadraoHoras: 8
 });
-assert.strictEqual(apuracaoFolga.minutosNormais, 0, 'Minutos normais em folga devem ser 0');
-assert.strictEqual(apuracaoFolga.minutosExtrasNormais, 0, 'Minutos extras normais devem ser 0');
-assert.strictEqual(apuracaoFolga.minutosExtrasFolga, 480, 'Minutos extras 100% devem ser 480 (8h)');
-console.log('✅ Horas Extras (50% vs 100% Folga): 100% aprovada!');
+assert.strictEqual(apFolga.minutosExtrasFolga, 480, 'Folga da escala trabalhada vai a 100%');
+console.log('✅ Horas Extras (50% dia útil vs 100% fim de semana/feriado/folga): 100% aprovada!');
 
 // 4. TESTE DE CÁLCULO SALARIAL
 console.log('\n--- 4. TESTANDO CÁLCULO SALARIAL E HOLERITE ---');

@@ -2,6 +2,8 @@
  * Motor de Cálculo de Horas Trabalhadas e Horas Extras
  */
 
+import { FeriadosService } from './feriados.js';
+
 export class PontoService {
   /**
    * Converte "HH:MM" para minutos totais do dia (0 a 1439)
@@ -61,45 +63,84 @@ export class PontoService {
 
   /**
    * Calcula a divisão entre horas normais e horas extras de um registro
-   * @param {Object} params
-   * @param {number} params.minutosTrabalhados
-   * @param {boolean} params.isDiaTrabalhoEscala Se era dia previsto de trabalho na escala 1x1
-   * @param {number} params.jornadaPadraoHoras Ex: 8 ou 12
+   * Regras corporativas:
+   * - Dia de semana (Segunda a Sexta, sem feriado): horas excedentes = 50%
+   * - Fim de semana (Sábado ou Domingo): horas excedentes ou folgas = 100%
+   * - Feriados Nacionais Brasileiros: trabalho no feriado = 100%
+   * - Folga da escala 1x1 trabalhada: todo o tempo = 100%
    */
-  static apurarHorasDoDia({ minutosTrabalhados, isDiaTrabalhoEscala, jornadaPadraoHoras = 8 }) {
+  static apurarHorasDoDia({ data = '', minutosTrabalhados, isDiaTrabalhoEscala, jornadaPadraoHoras = 8 }) {
     const minutosJornadaPadrao = jornadaPadraoHoras * 60;
 
-    // CASO 1: Trabalhou em dia de folga (plantão extra / folga vendida / bico)
-    // Na legislação e prática, todo o tempo trabalhado na folga é considerado HORA EXTRA (100%)
-    if (!isDiaTrabalhoEscala) {
+    let ehFimDeSemana = false;
+    if (data && typeof data === 'string' && data.includes('-')) {
+      const [ano, mes, dia] = data.split('-').map(Number);
+      const dt = new Date(ano, mes - 1, dia, 12, 0, 0);
+      const ds = dt.getDay();
+      ehFimDeSemana = (ds === 0 || ds === 6);
+    }
+
+    const feriado = data ? FeriadosService.obterFeriado(data) : null;
+    const ehFeriado = Boolean(feriado);
+    const nomeFeriado = feriado ? feriado.nome : '';
+
+    // CASO 1: Trabalhou em dia de folga (1x1) ou em Feriado Nacional
+    // Conforme regra da empresa ("feriado tbm e 100") e CLT:
+    // Horas em folga ou feriado são remuneradas integralmente a 100%
+    if (!isDiaTrabalhoEscala || ehFeriado) {
       return {
         minutosNormais: 0,
         minutosExtrasNormais: 0, // Extras 50%
         minutosExtrasFolga: minutosTrabalhados, // Extras 100%
         totalMinutos: minutosTrabalhados,
-        ehFolgaTrabalhada: true
+        ehFolgaTrabalhada: !isDiaTrabalhoEscala,
+        ehFeriado,
+        nomeFeriado,
+        ehFimDeSemana
       };
     }
 
-    // CASO 2: Dia normal de trabalho
+    // CASO 2: Plantão regular dentro da jornada padrão
     if (minutosTrabalhados <= minutosJornadaPadrao) {
       return {
         minutosNormais: minutosTrabalhados,
         minutosExtrasNormais: 0,
         minutosExtrasFolga: 0,
         totalMinutos: minutosTrabalhados,
-        ehFolgaTrabalhada: false
+        ehFolgaTrabalhada: false,
+        ehFeriado: false,
+        nomeFeriado: '',
+        ehFimDeSemana
       };
     }
 
-    // Ultrapassou a jornada padrão no dia normal
+    // CASO 3: Ultrapassou a jornada padrão no plantão regular
     const minutosExtras = minutosTrabalhados - minutosJornadaPadrao;
+
+    // Regra da empresa: horas extras no fim de semana vão a 100%
+    if (ehFimDeSemana) {
+      return {
+        minutosNormais: minutosJornadaPadrao,
+        minutosExtrasNormais: 0,
+        minutosExtrasFolga: minutosExtras, // Fim de semana: 100%
+        totalMinutos: minutosTrabalhados,
+        ehFolgaTrabalhada: false,
+        ehFeriado: false,
+        nomeFeriado: '',
+        ehFimDeSemana: true
+      };
+    }
+
+    // Dia de semana útil normal: horas extras vão a 50%
     return {
       minutosNormais: minutosJornadaPadrao,
-      minutosExtrasNormais: minutosExtras,
+      minutosExtrasNormais: minutosExtras, // Dia de semana: 50%
       minutosExtrasFolga: 0,
       totalMinutos: minutosTrabalhados,
-      ehFolgaTrabalhada: false
+      ehFolgaTrabalhada: false,
+      ehFeriado: false,
+      nomeFeriado: '',
+      ehFimDeSemana: false
     };
   }
 
@@ -130,6 +171,7 @@ export class PontoService {
         this.calcularMinutosTrabalhados(p.entrada, p.saida, p.saidaAlmoco, p.retornoAlmoco);
 
       const apuracao = this.apurarHorasDoDia({
+        data: p.data,
         minutosTrabalhados,
         isDiaTrabalhoEscala,
         jornadaPadraoHoras

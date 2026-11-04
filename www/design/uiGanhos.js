@@ -145,9 +145,18 @@ export class UIGanhos {
       const totalExtras = ap.minutosExtrasNormais + ap.minutosExtrasFolga;
       const temExtra = totalExtras > 0;
 
-      let badgeTipo = ap.ehFolgaTrabalhada ?
-        '<span class="badge-status-turno folga-extra" style="font-size:0.68rem; padding:2px 6px;">Folga Trabalhada (100%)</span>' :
-        '<span class="badge-status-turno trabalho" style="font-size:0.68rem; padding:2px 6px;">Plantão 1x1</span>';
+      let badgeTipo = '';
+      if (ap.ehFeriado) {
+        badgeTipo = `<span class="badge-status-turno feriado" style="font-size:0.68rem; padding:2px 6px;">🇧🇷 ${ap.nomeFeriado} (100%)</span>`;
+      } else if (ap.ehFolgaTrabalhada) {
+        badgeTipo = '<span class="badge-status-turno folga-extra" style="font-size:0.68rem; padding:2px 6px;">Folga Trabalhada (100%)</span>';
+      } else if (ap.ehFimDeSemana) {
+        badgeTipo = '<span class="badge-status-turno fim-de-semana" style="font-size:0.68rem; padding:2px 6px;">Fim de Semana (100%)</span>';
+      } else {
+        badgeTipo = '<span class="badge-status-turno trabalho" style="font-size:0.68rem; padding:2px 6px;">Plantão 1x1</span>';
+      }
+
+      const taxaTxt = ap.minutosExtrasFolga > 0 ? '100%' : '50%';
 
       return `
         <div class="item-registro-historico">
@@ -156,7 +165,7 @@ export class UIGanhos {
               <span class="registro-data-texto">${dataFmt}</span>
               ${badgeTipo}
             </div>
-            ${temExtra ? `<span style="font-size:0.75rem; font-weight:700; color:#fbbf24;">+${PontoService.minutosParaHoraStr(totalExtras, true)} HE</span>` : ''}
+            ${temExtra ? `<span style="font-size:0.75rem; font-weight:700; color:#fbbf24;">+${PontoService.minutosParaHoraStr(totalExtras, true)} (${taxaTxt})</span>` : ''}
           </div>
           <div class="registro-horarios-linha">
             <span>Entrada: <strong>${r.entrada || '--:--'}</strong></span>

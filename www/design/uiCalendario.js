@@ -4,6 +4,7 @@
 
 import { StorageService } from '../logica/storage.js';
 import { EscalaService } from '../logica/escala.js';
+import { FeriadosService } from '../logica/feriados.js';
 import { UIModal } from './uiModal.js';
 import { mostrarToast } from './toast.js';
 
@@ -15,9 +16,16 @@ export class UICalendario {
     this.container = document.getElementById(containerId);
     this.renderizar();
     this.renderizarFaixaHome('container-agenda-home');
+
+    // Sincroniza feriados oficiais em background se online
+    FeriadosService.sincronizarFeriadosSeOnline(this.anoAtual).then(() => {
+      this.renderizar();
+      this.renderizarFaixaHome('container-agenda-home');
+    });
   }
 
   static navegarMes(delta) {
+    const anoAnterior = this.anoAtual;
     this.mesAtual += delta;
     if (this.mesAtual > 12) {
       this.mesAtual = 1;
@@ -25,6 +33,9 @@ export class UICalendario {
     } else if (this.mesAtual < 1) {
       this.mesAtual = 12;
       this.anoAtual -= 1;
+    }
+    if (this.anoAtual !== anoAnterior) {
+      FeriadosService.sincronizarFeriadosSeOnline(this.anoAtual).then(() => this.renderizar());
     }
     this.renderizar();
   }
@@ -72,13 +83,21 @@ export class UICalendario {
       const isHoje = offset === 0;
 
       let rotulo = offset === -1 ? 'Ontem' : (offset === 0 ? 'Hoje' : (offset === 1 ? 'Amanhã' : nomesSemana[d.getDay()]));
+      const feriado = FeriadosService.obterFeriado(dataStr);
+
+      let badgeCls = isTrabalho ? 'trabalho' : 'folga';
+      let badgeTxt = isTrabalho ? 'Plantão' : 'Folga';
+      if (feriado) {
+        badgeCls = isTrabalho ? 'trabalho feriado' : 'feriado';
+        badgeTxt = isTrabalho ? 'Plantão 100%' : 'Feriado';
+      }
 
       html += `
-        <div class="item-dia-agenda ${isHoje ? 'hoje' : ''}" data-data="${dataStr}">
+        <div class="item-dia-agenda ${isHoje ? 'hoje' : ''} ${feriado ? 'feriado' : ''}" data-data="${dataStr}" title="${feriado ? `Feriado: ${feriado.nome}` : ''}">
           <span class="dia-semana">${rotulo}</span>
           <span class="dia-num">${d.getDate()}</span>
-          <span class="status-badge celula-dia-badge ${isTrabalho ? 'trabalho' : 'folga'}">
-            ${isTrabalho ? 'Plantão' : 'Folga'}
+          <span class="status-badge celula-dia-badge ${badgeCls}">
+            ${badgeTxt}
           </span>
         </div>
       `;
@@ -131,7 +150,8 @@ export class UICalendario {
         <div class="calendario-legenda">
           <div class="legenda-item"><span class="legenda-cor trabalho"></span> Plantão (1x1)</div>
           <div class="legenda-item"><span class="legenda-cor folga"></span> Folga</div>
-          <div class="legenda-item"><span class="legenda-cor folga-trabalhada"></span> Folga Trabalhada (100%)</div>
+          <div class="legenda-item"><span class="legenda-cor folga-trabalhada"></span> Folga Trab. (100%)</div>
+          <div class="legenda-item"><span class="legenda-cor feriado"></span> 🇧🇷 Feriado (100%)</div>
         </div>
 
         <div class="grade-dias-semana">
@@ -151,11 +171,20 @@ export class UICalendario {
       const ponto = mapaPontos.get(dataStr);
       const temPonto = ponto && ponto.entrada;
       const isHoje = dataStr === hojeStr;
+      const feriado = FeriadosService.obterFeriado(dataStr);
+      const ehFeriado = Boolean(feriado);
+      const nomeFeriado = feriado ? feriado.nome : '';
 
       let classeBadge = 'folga';
       let textoBadge = 'Folga';
 
-      if (isTrabalhoEscala) {
+      if (ehFeriado && temPonto) {
+        classeBadge = 'feriado-trabalhado';
+        textoBadge = '100% Feriado';
+      } else if (ehFeriado) {
+        classeBadge = isTrabalhoEscala ? 'trabalho feriado' : 'feriado';
+        textoBadge = isTrabalhoEscala ? 'Plantão 100%' : 'Feriado';
+      } else if (isTrabalhoEscala) {
         classeBadge = 'trabalho';
         textoBadge = 'Plantão';
       } else if (temPonto) {
@@ -164,9 +193,10 @@ export class UICalendario {
       }
 
       html += `
-        <div class="celula-dia ${isHoje ? 'hoje' : ''}" data-data="${dataStr}">
+        <div class="celula-dia ${isHoje ? 'hoje' : ''} ${ehFeriado ? 'feriado' : ''}" data-data="${dataStr}" title="${ehFeriado ? `Feriado Nacional: ${nomeFeriado}` : ''}">
           ${temPonto ? '<span class="ponto-marcado-dot" title="Ponto Registrado"></span>' : ''}
           <div class="celula-dia-numero">${dia}</div>
+          ${ehFeriado ? `<span class="dia-feriado-mini" title="${nomeFeriado}">🇧🇷 ${nomeFeriado}</span>` : ''}
           <div class="celula-dia-badge ${classeBadge}">${textoBadge}</div>
         </div>
       `;

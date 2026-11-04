@@ -3,7 +3,7 @@
  * Armazena todos os recursos estáticos em cache e gerencia atualizações instantâneas.
  */
 
-const CACHE_NAME = 'pontoflex-cache-v3.1.0';
+const CACHE_NAME = 'pontoflex-cache-v3.3.0';
 
 // Recursos necessários para funcionamento 100% offline
 const ARQUIVOS_CACHE = [
@@ -32,6 +32,7 @@ const ARQUIVOS_CACHE = [
   './logica/escala.js',
   './logica/ponto.js',
   './logica/calculoSalario.js',
+  './logica/feriados.js',
   './logica/alarme.js',
   './ferramentas/audioAlarme.js',
   './ferramentas/exportador.js',
